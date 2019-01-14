@@ -16,12 +16,18 @@ import javax.persistence.*;
 @Setter
 @Entity
 @Table(name="tbl_member_roles")
-@EqualsAndHashCode(of="fno")
+@IdClass(MemberRoleId.class)
 @ToString
 public class MemberRole {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long fno;
-
-    private String roleName;
+    @ManyToOne
+    @JoinColumn(name="memberID")
+    private Member member;
+    
+    @Id
+    @ManyToOne
+    @JoinColumn(name="role_id")
+    private Roles roles;
+    
+   
 }

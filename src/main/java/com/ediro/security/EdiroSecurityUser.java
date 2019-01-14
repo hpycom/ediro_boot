@@ -6,6 +6,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import com.ediro.domain.Member;
 import com.ediro.domain.MemberRole;
+import com.ediro.domain.Roles;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -23,15 +24,15 @@ public class EdiroSecurityUser extends User {
 
     public EdiroSecurityUser(Member member) {
         //super(member.getUid(), "{noop}" + member.getUpw(), makeGrantedAUthority(member.getRoles()));
-        super(member.getMemberID(),  "{noop}" + member.getMemberPwd(), makeGrantedAUthority(member.getRoles()));
+        super(member.getMemberID(),  "{noop}" + member.getMemberPwd(), makeGrantedAuthority(member.getMemberRoles()));
         this.member = member;
     }
 
-    private static List<GrantedAuthority> makeGrantedAUthority(List<MemberRole> roles) {
+    private static List<GrantedAuthority> makeGrantedAuthority(List<MemberRole> MemberRoles) {
         List<GrantedAuthority> list = new ArrayList<>();
 
-        roles.forEach(role -> {
-            list.add(new SimpleGrantedAuthority(ROLE_PREFIX + role.getRoleName()));
+        MemberRoles.forEach(memberRole -> {
+            list.add(new SimpleGrantedAuthority(ROLE_PREFIX + memberRole.getRoles().getRoleName()));
         });
 
         return list;

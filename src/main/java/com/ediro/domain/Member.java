@@ -13,6 +13,7 @@ import com.ediro.domain.MemberRole;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -43,13 +44,26 @@ public class Member {
 	private String email;
 	private String homepage;
 	private String fax;
+	
+	@OneToMany(mappedBy="member")
+	private List<Book> books = new ArrayList<Book>();
+	
 	@CreationTimestamp
 	private LocalDateTime regdate;
 	@UpdateTimestamp
 	private LocalDateTime updatedate;
 	
-	   @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	    @JoinColumn(name="memberRole")
-	    private List<MemberRole> roles;
+	@OneToMany(fetch = FetchType.EAGER,mappedBy="member")
+	private List<MemberRole> memberRoles;
+	
+	public void addBook(Book book)
+	{
+		this.books.add(book);
+		if(book.getMember() != this)
+		{
+			book.setMember(this);
+		}
+	}
+	
 }
 

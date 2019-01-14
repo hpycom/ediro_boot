@@ -10,10 +10,14 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 import com.ediro.domain.Member;
 import com.ediro.domain.MemberRole;
+import com.ediro.domain.Roles;
 
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.stream.IntStream;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
 /**
  * @author zacconding
@@ -27,32 +31,34 @@ import java.util.stream.IntStream;
 public class MemberRepositoryTest {
     @Autowired
     MemberRepository memberRepository;
-
+    @PersistenceContext
+    private EntityManager em;
+    
     @Test
     public void insert() {
-        IntStream.range(0,2).forEach(
-        		
-        		i -> {
-            Member member = new Member();
-            member.setMemberID("user" + i);
-            member.setMemberPwd("pw"+i);
-            member.setCompanyName("사용자"+i);
-
-            MemberRole role = new MemberRole();
-            if(i <= 0) {
-                role.setRoleName("BOOKSTORE");
-            }
-            else if(i<=1) {
-                role.setRoleName("PUBLISER");
-            }
-            else {
-                role.setRoleName("ADMIN");
-            }
-            member.setRoles(Arrays.asList(role));
-            memberRepository.save(member);
-        }
+   
+    	
+        /*    Member member = new Member();
+            member.setMemberID("bookStore");
+            member.setMemberPwd("pw01");
+            member.setCompanyName("서점");
+            
+           Roles role = em.find(Roles.class, 1);
+           List<>
+           member.setMemberRoles();
         
-        		);
+            em.persist(member);
+            
+            em.find(MemberRole.class, arg1)    
+            Roles role = new Roles();
+           
+            MemberRole memRole = new MemberRole();
+            memRole.setMember(member);
+            memRole.setRoles(roles);
+       //     member.setRoles(roles);(Arrays.asList(role));
+            memberRepository.save(member);
+        } 
+        		);*/
     }
 
     //@Transactional

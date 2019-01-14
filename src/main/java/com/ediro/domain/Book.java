@@ -37,12 +37,25 @@ public class Book {
 	private String author;
 	private String publisher;
     private int price;
+    private String isbn;
     
-	@CreationTimestamp
+    @ManyToOne
+    @JoinColumn(name = "memberID")
+    private Member member;
+	
+    @CreationTimestamp
 	private LocalDateTime regdate;
-	@UpdateTimestamp
+	
+    @UpdateTimestamp
 	private LocalDateTime updatedate;
 	
+    public void setMember(Member member)
+    {
+    	this.member = member;
+    	if(! member.getBooks().contains(this)) {
+    		member.getBooks().add(this);
+    	}
+    }
 }
 
 
