@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.ediro.domain.Book;
 import com.ediro.persistence.BookRepository;
 
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.log;
 
 import java.util.Collection;
 import java.util.List;

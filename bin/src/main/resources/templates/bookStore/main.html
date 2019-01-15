@@ -1,0 +1,70 @@
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+       layout:decorate="~{/layout/layout_bstore_basic}">
+
+<head>
+    <title>Thymeleaf3</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <style type="text/css">
+		input.htCheckboxRendererInput{ margin: 3; }
+	</style>
+  </head>
+
+<body>
+ <section layout:fragment="content">
+<h1>/bookStore for bookStore</h1>
+<hr />
+<h3 sec:authentication="name">Spring security username</h3>
+<h3>[[${#authentication.name}]]</h3>
+<hr />
+<div id="example"></div>
+<button onclick="javascript:loadData();">load</button>
+</section>
+
+
+<th:block layout:fragment="script">
+<script th:inline="javascript">
+
+var hot = new Handsontable(example, {
+	  rowHeaders: true,
+	  colHeaders: true,
+	  colHeaders: ['bookCode', '도서명', '바코드', '저자','출판사','정가'],
+	  startRows: 1,
+	  startCols: 6,
+	  columns: [
+				    {data: 'bookCode',},
+				    {data: 'bookTitle'},
+				    {data: 'barcode'},
+				    {data: 'author'},
+				    {data: 'publisher'},
+				    {data: 'price', type: 'numeric',numericFormat:{pattern: '0,0'}},
+				    {type: 'checkbox',checkedTemplate: '1',uncheckedTemplate: '0'}
+		   		]
+	 });
+	 
+function loadData() {
+    $.ajax({
+        url: 'http://localhost:8080/bookOrder/booklist',
+        type: 'get',
+        dataType: 'json',
+        async: true,
+        success: function(res) {
+        	 hot.loadData(res);
+        }
+    });
+}
+
+	
+	
+
+</script>
+</th:block>
+
+
+
+ 
+   
+</body>
+
+</html>
