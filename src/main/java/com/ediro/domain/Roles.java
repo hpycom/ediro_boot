@@ -21,10 +21,10 @@ import javax.persistence.*;
 public class Roles {
     @Id@Column(name="role_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long role_id;
+    private int role_id;
 
     private String roleName;
     
-    @OneToMany(mappedBy="member")
-    private List<MemberRole> members;
+   /* @OneToMany(mappedBy="member")
+    private List<MemberRole> members;*/
 }

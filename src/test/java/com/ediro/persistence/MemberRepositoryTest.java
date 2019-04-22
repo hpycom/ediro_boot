@@ -31,34 +31,45 @@ import javax.persistence.PersistenceContext;
 public class MemberRepositoryTest {
     @Autowired
     MemberRepository memberRepository;
+ 
     @PersistenceContext
     private EntityManager em;
     
     @Test
+    @Transactional
     public void insert() {
    
     	
-        /*    Member member = new Member();
-            member.setMemberID("bookStore");
-            member.setMemberPwd("pw01");
-            member.setCompanyName("서점");
-            
+          /* Member member = new Member();
+            member.setMemberID("bookStore2");
+            member.setMemberPwd("pw02");
+            member.setCompanyName("테스트서점2");
+            em.persist(member);*/
            Roles role = em.find(Roles.class, 1);
-           List<>
+    	
+           Member member = em.find(Member.class, "bookStore");
+           /* List<>
            member.setMemberRoles();
-        
-            em.persist(member);
+        */
+       //     em.persist(member);
             
-            em.find(MemberRole.class, arg1)    
-            Roles role = new Roles();
+           
            
             MemberRole memRole = new MemberRole();
             memRole.setMember(member);
-            memRole.setRoles(roles);
+            memRole.setRoles(role);
+            
+        	member.getMemberRoles().add(memRole);
+        	
+        	//role.getMembers().add(memRole);
+        //    em.persist(memRole);
        //     member.setRoles(roles);(Arrays.asList(role));
-            memberRepository.save(member);
-        } 
-        		);*/
+            em.persist(memRole);
+         
+            em.flush();
+            
+       // } 
+        	//	);*/
     }
 
     //@Transactional
