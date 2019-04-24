@@ -7,7 +7,12 @@ import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.Formula;
 import org.hibernate.annotations.JoinColumnOrFormula;
+import org.hibernate.annotations.JoinColumnsOrFormulas;
+import org.hibernate.annotations.JoinFormula;
 import org.hibernate.annotations.UpdateTimestamp;
 import com.ediro.domain.MemberRole;
 
@@ -31,7 +36,7 @@ public class Member {
 
 
     @Id
-	private String memberID;
+ 	private String memberID;
 	private String memberPwd;
 	private String companyName;
 	private String bossName;
@@ -45,7 +50,7 @@ public class Member {
 	private String homepage;
 	private String fax;
 	
-	@OneToMany(mappedBy="member")
+	@OneToMany(mappedBy="member",fetch = FetchType.LAZY)
 	private List<Book> books = new ArrayList<Book>();
 	
 	@CreationTimestamp

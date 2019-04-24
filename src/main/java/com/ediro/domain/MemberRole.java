@@ -7,6 +7,11 @@ import lombok.ToString;
 
 import javax.persistence.*;
 
+import org.hibernate.annotations.Formula;
+import org.hibernate.annotations.JoinColumnOrFormula;
+import org.hibernate.annotations.JoinColumnsOrFormulas;
+import org.hibernate.annotations.JoinFormula;
+
 /**
  * @author hpycom
  * @Date 2017-12-24
@@ -19,6 +24,7 @@ import javax.persistence.*;
 @IdClass(MemberRoleId.class)
 @ToString
 public class MemberRole {
+	
     @Id
     @ManyToOne
     @JoinColumn(name="memberID")

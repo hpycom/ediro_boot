@@ -24,8 +24,9 @@ public class EdiroSecurityUser extends User {
 
     public EdiroSecurityUser(Member member) {
         //super(member.getUid(), "{noop}" + member.getUpw(), makeGrantedAUthority(member.getRoles()));
-        super(member.getMemberID(),  "{noop}" + member.getMemberPwd(), makeGrantedAuthority(member.getMemberRoles()));
-        this.member = member;
+    	 
+       super(member.getMemberID(),  "{noop}" + member.getMemberPwd(), makeGrantedAuthority(member.getMemberRoles()));
+       this.member = member;
     }
 
     private static List<GrantedAuthority> makeGrantedAuthority(List<MemberRole> MemberRoles) {

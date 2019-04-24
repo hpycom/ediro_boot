@@ -11,6 +11,8 @@ import org.hibernate.annotations.JoinColumnOrFormula;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
+
+import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -30,7 +32,7 @@ public class Book {
 
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
-	private Long bookCode;
+	private BigInteger bookCode;
 	private String bookTitle;
 	private String barcode;
 	private int boarcodeSubsequence;

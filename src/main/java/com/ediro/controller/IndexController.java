@@ -45,7 +45,7 @@ public class IndexController {
 											}
 								} else if(authority.getAuthority().equals("ROLE_PUBLISHER")) {
 										try {
-													redirectStrategy.sendRedirect(arg0,arg1, "/publisher");
+													redirectStrategy.sendRedirect(arg0,arg1, "/publisher/main");
 											  } catch (Exception e) {
 													// TODO Auto-generated catch block
 													e.printStackTrace();

@@ -6,5 +6,5 @@ import java.io.Serializable;
 public class MemberRoleId implements Serializable {
 
 private String member;
-private Long roles;
+private int roles;
 }

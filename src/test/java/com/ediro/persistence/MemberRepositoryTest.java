@@ -37,22 +37,37 @@ public class MemberRepositoryTest {
     
     @Test
     @Transactional
+    public void insPublisher()
+    {
+    		Member member = new Member();
+    		member.setMemberID("pubcom");
+    		member.setMemberPwd("1111");
+    		member.setCompanyName("pubcom");
+    		
+    		em.persist(member);
+    		
+    		Roles role = em.find(Roles.class, 2);
+    		
+    		
+    		 MemberRole memRole = new MemberRole();
+             memRole.setMember(member);
+             memRole.setRoles(role);
+             
+         //	member.getMemberRoles().add(memRole);
+         	
+          //  em.persist(member);
+         	em.persist(memRole);
+    }
+    
+   /* @Test
+    @Transactional
     public void insert() {
    
     	
-          /* Member member = new Member();
-            member.setMemberID("bookStore2");
-            member.setMemberPwd("pw02");
-            member.setCompanyName("테스트서점2");
-            em.persist(member);*/
-           Roles role = em.find(Roles.class, 1);
+          Roles role = em.find(Roles.class, 1);
     	
            Member member = em.find(Member.class, "bookStore");
-           /* List<>
-           member.setMemberRoles();
-        */
-       //     em.persist(member);
-            
+           
            
            
             MemberRole memRole = new MemberRole();
@@ -61,17 +76,13 @@ public class MemberRepositoryTest {
             
         	member.getMemberRoles().add(memRole);
         	
-        	//role.getMembers().add(memRole);
-        //    em.persist(memRole);
-       //     member.setRoles(roles);(Arrays.asList(role));
-            em.persist(memRole);
+              em.persist(memRole);
          
             em.flush();
             
-       // } 
-        	//	);*/
+       
     }
-
+*/
     //@Transactional
     @Test
     public void read() {
