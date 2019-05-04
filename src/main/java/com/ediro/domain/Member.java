@@ -58,7 +58,7 @@ public class Member {
 	@UpdateTimestamp
 	private LocalDateTime updatedate;
 	
-	@OneToMany(fetch = FetchType.EAGER,mappedBy="member")
+	@OneToMany(mappedBy="member")
 	private List<MemberRole> memberRoles;
 	
 	public void addBook(Book book)
