@@ -58,8 +58,14 @@ public class Member {
 	@UpdateTimestamp
 	private LocalDateTime updatedate;
 	
-	@OneToMany(fetch = FetchType.EAGER,mappedBy="member")
-	private List<MemberRole> memberRoles;
+	@OneToMany(mappedBy="member",fetch = FetchType.LAZY)
+	private List<MemberRole> memberRoles = new ArrayList<>();
+	
+	public void addRole(MemberRole memberRole)
+	{
+		this.memberRoles.add(memberRole);
+	}
+	
 	
 	public void addBook(Book book)
 	{

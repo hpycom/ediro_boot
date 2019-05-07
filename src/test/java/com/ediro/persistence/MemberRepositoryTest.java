@@ -13,6 +13,7 @@ import com.ediro.domain.MemberRole;
 import com.ediro.domain.Roles;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.IntStream;
 
@@ -40,11 +41,11 @@ public class MemberRepositoryTest {
     public void insPublisher()
     {
     		Member member = new Member();
-    		member.setMemberID("pubcom");
+    		member.setMemberID("pubcom5");
     		member.setMemberPwd("1111");
-    		member.setCompanyName("pubcom");
+    		member.setCompanyName("pubcom5");
     		
-    		em.persist(member);
+    		
     		
     		Roles role = em.find(Roles.class, 2);
     		
@@ -52,11 +53,17 @@ public class MemberRepositoryTest {
     		 MemberRole memRole = new MemberRole();
              memRole.setMember(member);
              memRole.setRoles(role);
+            // List<MemberRole> memberRoles = new List<MemberRole>();
              
-         //	member.getMemberRoles().add(memRole);
+             member.addRole(memRole);
          	
           //  em.persist(member);
+             em.persist(member);
          	em.persist(memRole);
+         	
+         	
+         	 
+         	// em.persist(member);
     }
     
    /* @Test

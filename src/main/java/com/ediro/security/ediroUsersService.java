@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 //import org.springframework.test.annotation.IfProfileValue;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.ediro.persistence.MemberRepository;
 //import org.zerock.security.ZerockSecurityUser;
@@ -28,6 +29,7 @@ public class ediroUsersService implements UserDetailsService{
     private MemberRepository memberRepository;
 	
 	@Override
+	@Transactional
 	    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 	   
 		  log.info("## request loadUserByUserName userName : " + username);
