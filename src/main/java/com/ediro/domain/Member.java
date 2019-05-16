@@ -15,6 +15,9 @@ import org.hibernate.annotations.JoinColumnsOrFormulas;
 import org.hibernate.annotations.JoinFormula;
 import org.hibernate.annotations.UpdateTimestamp;
 import com.ediro.domain.MemberRole;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -50,6 +53,8 @@ public class Member {
 	private String homepage;
 	private String fax;
 	
+	//@JsonManagedReference
+	//@JsonIgnore
 	@OneToMany(mappedBy="member",fetch = FetchType.LAZY)
 	private List<Book> books = new ArrayList<Book>();
 	
@@ -75,6 +80,9 @@ public class Member {
 			book.setMember(this);
 		}
 	}
+	
+	
+
 	
 }
 

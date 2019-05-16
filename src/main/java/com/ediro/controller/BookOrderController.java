@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import com.ediro.domain.Book;
 import com.ediro.persistence.BookRepository;
-
+import com.ediro.service.BookService;
 
 import java.util.Collection;
 import java.util.List;
@@ -25,12 +25,12 @@ public class BookOrderController {
 	
 	@Autowired
 	BookRepository bookrepo;
-	
+	@Autowired BookService bookService;
 	
 	@GetMapping("/{bookTitle}")
 	public ResponseEntity<List<Book>> getBookByTitle(@PathVariable("bookTitle") String bookTitle)
 	{
-		log.info("get books by titles");
+	   log.info("get books by titles");
 	   List<Book> bookList =	bookrepo.findByBookTitleContaining(bookTitle);
 	
 	   return new ResponseEntity<>(bookList,HttpStatus.OK);
@@ -39,8 +39,8 @@ public class BookOrderController {
 	@GetMapping("/booklist")
 	public ResponseEntity<List<Book>> getBookList()
 	{
-		log.info("get books list");
-	   List<Book> bookList =	(List<Book>) bookrepo.findAll();
+	   log.info("get books list");
+	   List<Book> bookList = bookService.getBooks();	 //(List<Book>) bookrepo.findAll();
 	
 	   return new ResponseEntity<>(bookList,HttpStatus.OK);
 	}
