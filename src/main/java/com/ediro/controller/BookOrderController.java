@@ -44,17 +44,17 @@ public class BookOrderController {
 	}
 
 	@GetMapping("/booklist")
-	public ResponseEntity<List<Book>> getBookList(Principal principal)
+	public ResponseEntity<List<Book>> getBookList()
 	{
-		//Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal(); 
+		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal(); 
 		UserDetails userDetails = (UserDetails)principal;
 
-	   String user_id = ((EdiroSecurityUser) principal).getMember().getCompanyName();// userDetails.getUsername();
+	   String user_id = userDetails.getUsername();
 	  
 	   log.info("get books list");
 	
 	   Member imember = ((EdiroSecurityUser) userDetails).getMember();
-	   	log.info(imember.getCompanyName());
+	  	log.info(imember.getCompanyName());
 	   	
 	   List<Book> bookList = bookService.getBooks(user_id);	 //(List<Book>) bookrepo.findAll();
 	
