@@ -2,10 +2,13 @@ package com.ediro.controller;
 
 import lombok.extern.java.Log;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -43,8 +46,16 @@ public class BookOrderController {
 	@GetMapping("/booklist")
 	public ResponseEntity<List<Book>> getBookList(Principal principal)
 	{
-	   String user_id = principal.getName();
+		//Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal(); 
+		UserDetails userDetails = (UserDetails)principal;
+
+	   String user_id = ((EdiroSecurityUser) principal).getMember().getCompanyName();// userDetails.getUsername();
+	  
 	   log.info("get books list");
+	
+	   Member imember = ((EdiroSecurityUser) userDetails).getMember();
+	   	log.info(imember.getCompanyName());
+	   	
 	   List<Book> bookList = bookService.getBooks(user_id);	 //(List<Book>) bookrepo.findAll();
 	
 	   return new ResponseEntity<>(bookList,HttpStatus.OK);

@@ -22,6 +22,7 @@ public class EdiroSecurityUser extends User {
     private static final String ROLE_PREFIX="ROLE_";
     private Member member;
 
+    
     public EdiroSecurityUser(Member member) {
         //super(member.getUid(), "{noop}" + member.getUpw(), makeGrantedAUthority(member.getRoles()));
     	 
