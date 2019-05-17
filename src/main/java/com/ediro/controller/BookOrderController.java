@@ -6,14 +6,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import com.ediro.domain.Book;
+import com.ediro.domain.Member;
 import com.ediro.persistence.BookRepository;
+import com.ediro.security.EdiroSecurityUser;
 import com.ediro.service.BookService;
 
+import java.security.Principal;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -37,10 +41,11 @@ public class BookOrderController {
 	}
 
 	@GetMapping("/booklist")
-	public ResponseEntity<List<Book>> getBookList()
+	public ResponseEntity<List<Book>> getBookList(Principal principal)
 	{
+	   String user_id = principal.getName();
 	   log.info("get books list");
-	   List<Book> bookList = bookService.getBooks();	 //(List<Book>) bookrepo.findAll();
+	   List<Book> bookList = bookService.getBooks(user_id);	 //(List<Book>) bookrepo.findAll();
 	
 	   return new ResponseEntity<>(bookList,HttpStatus.OK);
 	}

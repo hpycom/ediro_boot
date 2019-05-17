@@ -53,20 +53,16 @@ public class MemberRepositoryTest {
     		 MemberRole memRole = new MemberRole();
              memRole.setMember(member);
              memRole.setRoles(role);
-            // List<MemberRole> memberRoles = new List<MemberRole>();
              
              member.addRole(memRole);
          	
-          //  em.persist(member);
              em.persist(member);
          	em.persist(memRole);
          	
-         	
-         	 
-         	// em.persist(member);
     }
     
-   /* @Test
+    
+    @Test
     @Transactional
     public void insert() {
    
@@ -89,7 +85,7 @@ public class MemberRepositoryTest {
             
        
     }
-*/
+
     //@Transactional
     @Test
     public void read() {

@@ -17,4 +17,5 @@ import com.ediro.domain.Book;
 public interface BookRepository extends CrudRepository<Book, String> {
 
 	public List<Book> findByBookTitleContaining(String title);
+	public List<Book> findByMember_MemberID(String memberID);
 }
