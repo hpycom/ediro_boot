@@ -69,6 +69,11 @@
 			<scope>runtime</scope>
 		</dependency>
 		<dependency>
+		    <groupId>org.mariadb.jdbc</groupId>
+		    <artifactId>mariadb-java-client</artifactId>
+		    <scope>2.4.1</scope>
+		</dependency>
+		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 			<optional>true</optional>
@@ -108,6 +113,18 @@
 		    <artifactId>handsontable</artifactId>
 		    <version>6.0.0</version>
 		</dependency>
+		<dependency>
+		    <groupId>com.mysema.querydsl</groupId>
+		    <artifactId>querydsl-apt</artifactId>
+		    <version>3.6.3</version>
+		    <scope>provided</scope>
+		</dependency>
+		
+		<dependency>
+		    <groupId>com.mysema.querydsl</groupId>
+		    <artifactId>querydsl-jpa</artifactId>
+		    <version>3.6.3</version>
+		</dependency>
 		
 	</dependencies>
 
@@ -116,6 +133,22 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+			<plugin>
+			    <groupId>com.mysema.maven</groupId>
+			    <artifactId>apt-maven-plugin</artifactId>
+			    <version>1.1.3</version>
+			    <executions>
+			        <execution>
+			            <goals>
+			                <goal>process</goal>
+			            </goals>
+			            <configuration>
+			                <outputDirectory>target/generated-sources/java</outputDirectory>
+			                <processor>com.mysema.query.apt.jpa.JPAAnnotationProcessor</processor>
+			            </configuration>
+			        </execution>
+			    </executions>
 			</plugin>
 		</plugins>
 	</build>

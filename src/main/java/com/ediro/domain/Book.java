@@ -10,6 +10,10 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.JoinColumnOrFormula;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 
 import java.math.BigInteger;
@@ -40,11 +44,14 @@ public class Book {
 	private String publisher;
     private int price;
     private String isbn;
+    private int dcPercent;// 할인율
     
     @ManyToOne
     @JoinColumn(name = "memberID")
+    @JsonIgnore
     private Member member;
 	
+    
     @CreationTimestamp
 	private LocalDateTime regdate;
 	
@@ -58,6 +65,7 @@ public class Book {
     		member.getBooks().add(this);
     	}
     }
+   
 }
 
 

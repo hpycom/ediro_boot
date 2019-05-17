@@ -45,7 +45,7 @@ var hot = new Handsontable(example, {
 	 
 function loadData() {
     $.ajax({
-        url: 'http://localhost:8080/bookOrder/booklist',
+        url: '/bookOrder/booklist',
         type: 'get',
         dataType: 'json',
         async: true,

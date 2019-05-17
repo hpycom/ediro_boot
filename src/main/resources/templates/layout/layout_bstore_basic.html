@@ -4,10 +4,14 @@
 <head>
     <title  layout:title-pattern="$LAYOUT_TITLE - $CONTENT_TITLE">EDIRO</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet"  th:href="@{/webjars/handsontable/6.0.0/handsontable.full.min.css}" media="screen" />
+ 
     <link th:href="@{/webjars/bootstrap/4.1.1/css/bootstrap.min.css}" rel="stylesheet" media="screen"  />
     <link rel="stylesheet" th:href="@{/css/main.css}" />
-   <link rel="stylesheet"  th:href="@{/webjars/handsontable/6.0.0/handsontable.full.min.css}"media="screen" />
-    
+     <style type="text/css">
+        body { font-family: Arial, "맑은 고딕" ; }
+		input.htCheckboxRendererInput{ margin: 3; }
+	</style>
 </head>
 
 <body>
@@ -71,7 +75,7 @@
                   <i class="fas fa-align-left"></i>
                   <span>Toggle Sidebar</span>
               </button>
-  
+  			
           </div>
       </nav>
       <div layout:fragment="content">
@@ -81,7 +85,8 @@
 
   </div>
 	
-	
+	 <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/solid.js" integrity="sha384-tzzSw1/Vo+0N5UhStP3bvwWPq+uvzCMfrN1fEFe+xBmv1C/AtVX5K0uZtmcHitFZ" crossorigin="anonymous"></script>
+     <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/fontawesome.js" integrity="sha384-6OIrr52G08NpOFSZdxxz1xdNSndlD4vdcf/q2myIUVO0VsqaGHJsB0RaBE01VTOY" crossorigin="anonymous"></script>
 	 <script th:src="@{/webjars/jquery/3.3.1-1/jquery.min.js}" ></script>
 	 <script th:src="@{/webjars/popper.js/1.14.3/popper.min.js}" ></script>
      <script th:src="@{/webjars/bootstrap/4.1.1/js/bootstrap.min.js}" ></script>
