@@ -10,15 +10,17 @@
 
 <body>
  <section layout:fragment="content">
-<h1>/bookStore for bookStore</h1>
-<hr />
-<h3 sec:authentication="name">Spring security username</h3>
-<h3>[[${#authentication.name}]]</h3>
-<hr />
-<span th:text ="${#authentication.principal.member.companyName}"></span>
-<hr />
-<div id="example"></div>
-<button onclick="javascript:loadData();">load</button>
+		<h1>/bookStore for bookStore</h1>
+		<hr />
+		<h3 sec:authentication="name">Spring security username</h3>
+		<h3>[[${#authentication.name}]]</h3>
+		<hr />
+		<span th:text ="${#authentication.principal.member.companyName}"></span>
+		<hr />
+		<div id="example"></div>
+		<button onclick="javascript:loadData();">load</button>
+
+		
 </section>
 
 
@@ -43,14 +45,28 @@ var hot = new Handsontable(example, {
 	 });
 	 
 function loadData() {
-    $.ajax({
+	
+	$('#exampleModal').modal('show');
+    
+	$.ajax({
         url: '/bookOrder/booklist',
         type: 'get',
         dataType: 'json',
         async: true,
-        success: function(res) {
-        	 hot.loadData(res);
+        success:function(res){
+        	hot.loadData(res);
+        },
+        error:function(request,status,error){
+            alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
         }
+     	,
+     	complete : function(data) {
+		setTimeout(function(){$('#exampleModal').modal('hide');
+		        	
+		        	}
+		        	,1000);
+   		}
+
     });
 }
 
