@@ -12,5 +12,8 @@ public class PublisherController {
    public void main() {
 	   
    }
-  
+   @GetMapping("/addBook")
+   public void addBook() {
+	   
+   }
 }

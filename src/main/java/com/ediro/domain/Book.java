@@ -38,6 +38,8 @@ public class Book {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
 	private BigInteger bookCode;
 	private String bookTitle;
+	private String bookSubTitle;
+	private String bookVerInfo;
 	private String barcode;
 	private int boarcodeSubsequence;
 	private String author;
