@@ -45,7 +45,6 @@ public class Book {
 	private String author;
 	private String publisher;
     private int price;
-    private String isbn;
     private int dcPercent;// 할인율
     
     @ManyToOne

@@ -10,99 +10,81 @@
 
 <body>
  <section layout:fragment="content">
-		<h4>/bookStore for bookStore</h4>
-		<hr />
-	
-	  <div>	
-		<button onclick="javascript:loadData();">load</button>
-	  	<br/>
-	    <br/>
-		  <div class="small-12 medium-9 columns" >
-		    
-					<div style = "width:100%;height:500px;overflow:hidden;">
-						<div id="example"></div>
-					</div>
-		  </div>
+		<h5>도서등록</h5>
+		<hr/>
 		
-	  </div>
+		  	
+			    <div>
+					<form th:action="@{insertBook}"  th:object="${book}" method="post" autocomplete="off">
+						<div class="row justify-content-start">
+						   <div class="form-group col-md-2">
+						    <label for="barcode">ISBN(ISSN)</label>
+						    <input type="text" class="form-control" id="barcode" name="barcode" th:value="${book.barcode}" maxlength="13" required>
+						  </div>
+						</div>
+						<div class="row justify-content-start">
+						  <div class="form-group col-md-6">
+						    <label for="bookTitle">도서명</label>
+						    <input type="text" class="form-control" id="bookTitle" name="bookTitle" th:value="${book.bookTitle}" required>
+						  </div>
+						</div>
+						<div class="row justify-content-start">
+						  <div class="form-group col-md-6">
+						    <label for="bookSubTitle">부제(시리즈명)</label>
+						    <input type="text" class="form-control" id="bookSubTitle" name="bookSubTitle" th:value="${book.bookSubTitle}" >
+						  </div>
+						</div>
+						<div class="row justify-content-start">
+						   <div class="form-group  col-md-2">
+						    <label for="bookVerInfo">판형</label>
+						    <input type="text" class="form-control" id="bookVerInfo" name="bookVerInfo" th:value="${book.bookVerInfo}" >
+						  </div>
+					    </div>
+					    <div class="row justify-content-start">
+						    <div class="form-group  col-md-4">
+						    <label for="publisher">출판사</label>
+						    <input type="text" class="form-control" id="publisher" name="publisher" th:value="${book.publisher}" required>
+						  </div>
+						</div>
+						<div class="row justify-content-start">
+						   <div class="form-group  col-md-4">
+						    <label for="author">저자</label>
+						    <input type="text" class="form-control" id="author" name="author" th:value="${book.author}" required>
+						  </div>
+						</div>
+						<div class="row justify-content-start">
+						   <div class="form-group  col-md-2">
+						    <label for="price">정가</label>
+						    <input type="number" class="form-control" id="price" name="price" th:value="${book.price}" required>
+						  </div>
+						</div>
+						<div class="row justify-content-start">
+						  <div class="form-group col-md-2">
+						    <label for="dcPercent">할인율</label>
+						    <input type="number" class="form-control" id="dcPercent" name="dcPercent" th:value="${book.dcPercent}" required>
+						  </div>
+						</div>
+						
+						  <button type="submit" class="btn btn-default"> 저장</button>
+						  <button type="reset" class="btn btn-primary"> 리셋</button>
+					
+					</form>
+				</div>
+				
+				
+			
 	
-	
-		
-	  <!-- Modal -->
-		<div class="modal" id="exampleModal" data-backdrop="static" tabindex="-1" role="dialog"  aria-labelledby="exampleModalLabel" aria-hidden="true">
-		  
-       </div>	
 </section>
 
 
 <th:block layout:fragment="script">
-<script th:inline="javascript">
-
-var hot = new Handsontable(example, {
-	  rowHeaders: true,
-	  colHeaders: true,
-	  colHeaders: ['bookCode', '도서명', '바코드', '저자','출판사','정가'],
-	  startRows: 1,
-	  startCols: 6,
-	  width: '100%',
-	  columns: [
-				    {data: 'bookCode',},
-				    {data: 'bookTitle'},
-				    {data: 'barcode'},
-				    {data: 'author'},
-				    {data: 'publisher'},
-				    {data: 'price', type: 'numeric',numericFormat:{pattern: '0,0'}},
-				    {type: 'checkbox',checkedTemplate: '1',uncheckedTemplate: '0'}
-		   		]
-	 });
-	 
-function loadData() {
-	
-	$('#exampleModal').modal('show');
-    
-	$.ajax({
-        url: '/bookOrder/booklist',
-        type: 'get',
-        dataType: 'json',
-        async: true,
-        success:function(res){
-        	hot.loadData(res);
-        },
-        error:function(request,status,error){
-            alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
-        }
-     	,
-     	complete : function(data) {
-		setTimeout(function(){$('#exampleModal').modal('hide');
-		        	
-		        	}
-		        	,1000);
-   		}
-
-    });
-}
-
-$('#exampleModal').html('<div class="modal-dialog modal-dialog-centered" role="document"> \
-		  <div class="modal-content"> \
-			<div class="modal-header"> \
-	        <h5 class="modal-title" id="exampleModalLabel">ediro</h5> \
-	        <button type="button" class="close" data-dismiss="modal" aria-label="Close"> \
-	          <span aria-hidden="true">&times;</span> \
-	        </button> \
-		      </div> \
-		      <div class="modal-body"> \
-		       처리중... \
-		      </div> \
-		      <div class="modal-footer"> \
-		        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> \
-		      </div> \
-		    </div> \
-		  </div> \
-		</div>');
+	<script th:inline="javascript">
 	
 	
-
-</script>
+		
+		
+	
+	</script>
 </th:block>
 
 

@@ -70,8 +70,10 @@
 
  <form sec:authorize="!isAuthenticated()" method="post" th:action="@{/login}" class="form-signin"  style="width:100%;max-width:330px;padding:15px;margin:auto;" >
             
+            <p>
             <input type="text" class="form-control" placeholder="아이디"
                                                               id="username" name="username"  />
+            </p>                                                 
             <input type="password" class="form-control" placeholder="패스워드"
                                                               id="password" name="password"  />
             
@@ -84,7 +86,7 @@
              	</label>
      		</div>
             
-            <button type="submit" class="btn btn-lg btn-primary btn-block">로 그 인</button>
+            <button type="submit" class="btn btn-lg btn-info btn-block">로 그 인</button>
             
              <p>
                
