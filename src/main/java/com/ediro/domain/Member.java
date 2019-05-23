@@ -55,9 +55,9 @@ public class Member {
 	
 	//@JsonManagedReference
 	//@JsonIgnore
-	@OneToMany(mappedBy="member",fetch = FetchType.LAZY)
+	/*@OneToMany(mappedBy="member",fetch = FetchType.LAZY)
 	private List<Book> books = new ArrayList<Book>();
-	
+	*/
 	@CreationTimestamp
 	private LocalDateTime regdate;
 	@UpdateTimestamp
@@ -72,14 +72,14 @@ public class Member {
 	}
 	
 	
-	public void addBook(Book book)
+	/*public void addBook(Book book)
 	{
 		this.books.add(book);
 		if(book.getMember() != this)
 		{
 			book.setMember(this);
 		}
-	}
+	}*/
 	
 	
 

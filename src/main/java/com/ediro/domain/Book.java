@@ -62,9 +62,9 @@ public class Book {
     public void setMember(Member member)
     {
     	this.member = member;
-    	if(! member.getBooks().contains(this)) {
+    	/*if(! member.getBooks().contains(this)) {
     		member.getBooks().add(this);
-    	}
+    	}*/
     }
    
 }

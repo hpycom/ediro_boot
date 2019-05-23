@@ -1,5 +1,7 @@
 package com.ediro.controller;
 
+import java.security.Principal;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
@@ -12,6 +14,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.ediro.domain.Book;
 import com.ediro.persistence.BookRepository;
+import com.ediro.service.BookService;
 
 import lombok.extern.java.Log;
 
@@ -20,7 +23,7 @@ import lombok.extern.java.Log;
 @Log
 public class PublisherController {
    @Autowired
-   BookRepository bookRepo;
+   BookService bookSrv;
    
    @GetMapping("/main")
    public void main() {
@@ -32,9 +35,9 @@ public class PublisherController {
    }
   
    @PostMapping("/insertBook")
-   public String insertBook(@ModelAttribute("book")Book book,RedirectAttributes rttr) {
+   public String insertBook(@ModelAttribute("book")Book book,RedirectAttributes rttr,Principal principal) {
 	   log.info("" + book);
-	   bookRepo.save(book);
+	   bookSrv.save(book,principal);
 	   return "redirect:/publisher/addBook";
    }
 }

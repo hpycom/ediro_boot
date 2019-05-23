@@ -1,5 +1,6 @@
 package com.ediro.persistence;
 
+
 import org.springframework.data.repository.CrudRepository;
 import com.ediro.domain.Member;
 
