@@ -1,10 +1,14 @@
 package com.ediro.controller;
 
 import java.security.Principal;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,8 +19,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.ediro.domain.Book;
 import com.ediro.persistence.BookRepository;
 import com.ediro.service.BookService;
+import com.ediro.vo.PageVO;
 
 import lombok.extern.java.Log;
+import java.security.Principal;
 
 @Controller
 @RequestMapping("/publisher")
@@ -26,9 +32,17 @@ public class PublisherController {
    BookService bookSrv;
    
    @GetMapping("/main")
-   public void main() {
+   public void main(Principal principal,Model model,PageVO pageVO) {
 	   
+	 
+	   Page<Book> result = bookSrv.getBooks(pageVO);
+	   
+	  // List<Book> bookList = bookSrv.getBooks(principal.getName());	
+	   
+	   
+	   model.addAttribute("result",result);
    }
+   
    @GetMapping("/addBook")
    public void addBook(@ModelAttribute("book")Book book) {
 	   log.info(book.toString());

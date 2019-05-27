@@ -32,18 +32,11 @@ import java.util.Optional;
 @Log
 public class BookOrderController {
 	
-	@Autowired
-	BookRepository bookrepo;
+	//@Autowired
+	//BookRepository bookrepo;
 	@Autowired BookService bookService;
 	
-	@GetMapping("/{bookTitle}")
-	public ResponseEntity<List<Book>> getBookByTitle(@PathVariable("bookTitle") String bookTitle)
-	{
-	   log.info("get books by titles");
-	   List<Book> bookList =	bookrepo.findByBookTitleContaining(bookTitle);
 	
-	   return new ResponseEntity<>(bookList,HttpStatus.OK);
-	}
 
 	@GetMapping("/booklist")
 	public ResponseEntity<List<Book>> getBookList(Principal principal)

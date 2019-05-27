@@ -55,7 +55,7 @@
 var hot = new Handsontable(example, {
 	  rowHeaders: true,
 	  colHeaders: true,
-	  colHeaders: ['bookCode', '도서명', '바코드', '저자','출판사','정가'],
+	  colHeaders: ['bookCode', '도서명', '바코드', '저자','출판사','정가','발행일'],
 	  startRows: 1,
 	  startCols: 6,
 	  width: '100%',
@@ -67,8 +67,10 @@ var hot = new Handsontable(example, {
 				    {data: 'author'},
 				    {data: 'publisher'},
 				    {data: 'price', type: 'numeric',numericFormat:{pattern: '0,0'}},
+				    {data: 'pubDate'},
 				    {type: 'checkbox',checkedTemplate: '1',uncheckedTemplate: '0'}
-		   		]
+		   		],
+	  data: JSON.parse(JSON.stringify([[${result.content}]]))
 	 });
 	 
 function loadData() {

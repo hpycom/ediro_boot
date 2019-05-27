@@ -113,17 +113,18 @@
 		    <artifactId>handsontable</artifactId>
 		    <version>6.0.0</version>
 		</dependency>
+		
 		<dependency>
-		    <groupId>com.mysema.querydsl</groupId>
+		    <groupId>com.querydsl</groupId>
 		    <artifactId>querydsl-apt</artifactId>
-		    <version>3.6.3</version>
+		
 		    <scope>provided</scope>
 		</dependency>
 		
 		<dependency>
-		    <groupId>com.mysema.querydsl</groupId>
+		    <groupId>com.querydsl</groupId>
 		    <artifactId>querydsl-jpa</artifactId>
-		    <version>3.6.3</version>
+		  
 		</dependency>
 		
 	</dependencies>
@@ -145,7 +146,7 @@
 			            </goals>
 			            <configuration>
 			                <outputDirectory>target/generated-sources/java</outputDirectory>
-			                <processor>com.mysema.query.apt.jpa.JPAAnnotationProcessor</processor>
+			                <processor>com.querydsl.apt.jpa.JPAAnnotationProcessor</processor>
 			            </configuration>
 			        </execution>
 			    </executions>

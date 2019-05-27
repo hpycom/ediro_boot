@@ -45,10 +45,11 @@ public class Book {
 	private String author;
 	private String publisher;
     private int price;
+    private String pubDate;
     private int dcPercent;// 할인율
     
     @ManyToOne
-    @JoinColumn(name = "memberID")
+    @JoinColumn(name = "memberid")
     @JsonIgnore
     private Member member;
 	

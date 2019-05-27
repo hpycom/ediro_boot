@@ -36,55 +36,7 @@ public class MemberRepositoryTest {
     @PersistenceContext
     private EntityManager em;
     
-    @Test
-    @Transactional
-    public void insPublisher()
-    {
-    		Member member = new Member();
-    		member.setMemberID("pubcom5");
-    		member.setMemberPwd("1111");
-    		member.setCompanyName("pubcom5");
-    		
-    		
-    		
-    		Roles role = em.find(Roles.class, 2);
-    		
-    		
-    		 MemberRole memRole = new MemberRole();
-             memRole.setMember(member);
-             memRole.setRoles(role);
-             
-             member.addRole(memRole);
-         	
-             em.persist(member);
-         	em.persist(memRole);
-         	
-    }
-    
-    
-    @Test
-    @Transactional
-    public void insert() {
-   
-    	
-          Roles role = em.find(Roles.class, 1);
-    	
-           Member member = em.find(Member.class, "bookStore");
-           
-           
-           
-            MemberRole memRole = new MemberRole();
-            memRole.setMember(member);
-            memRole.setRoles(role);
-            
-        	member.getMemberRoles().add(memRole);
-        	
-              em.persist(memRole);
-         
-            em.flush();
-            
-       
-    }
+
 
     //@Transactional
     @Test
