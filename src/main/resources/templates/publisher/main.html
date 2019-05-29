@@ -10,8 +10,7 @@
 
 <body>
  <section layout:fragment="content">
-		<h4>/bookStore for bookStore</h4>
-		<hr />
+	
 <div>
 	<ul class="nav nav-tabs" id="myTab" role="tablist">
 	  <li class="nav-item">
@@ -26,17 +25,42 @@
 	  <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
 	  <br/>
 		<button onclick="javascript:loadData();">load</button>
+	    <button id="save">save</button>
 	  	<br/>
 	    <br/>
 	  <div class="small-12 medium-9 columns" >
-	    
-				<div style = "width:100%;height:500px;overflow:hidden;">
-					<div id="example"></div>
+	    <pre id="example1console" class="console">Click "Load" to load data from server</pre>
+			<div style = "width:100%;height:600px;overflow:hidden;">
+				<div id="example"></div>
+			</div>
+			
+			<nav>
+				<div>
+	
+					<ul class="pagination">
+						<li class="page-item" th:if="${result.prevPage}"><a class="page-link"
+							th:href="${result.prevPage.pageNumber} + 1">PREV
+								[[${result.prevPage.pageNumber} + 1]]</a></li>
+	
+						<li class="page-item"
+							th:classappend="${p.pageNumber == result.currentPageNum -1}?active: '' "
+							th:each="p:${result.pageList}"><a class="page-link"
+							th:href="${p.pageNumber} +1">[[${p.pageNumber} +1]]</a></li>
+	
+						<li class="page-item" th:if="${result.nextPage}"><a class="page-link"
+							th:href="${result.nextPage.pageNumber} + 1">NEXT
+								[[${result.nextPage.pageNumber} + 1]]</a></li>
+					 </ul>
 				</div>
+			</nav>
 	  </div>
 		
 	  </div>
-	  <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">...</div>
+	  
+	  <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+		  
+	  
+	  </div>
 	 </div>
 	
 	
@@ -46,6 +70,12 @@
 			<div class="modal" id="exampleModal" data-backdrop="static" tabindex="-1" role="dialog"  aria-labelledby="exampleModalLabel" aria-hidden="true">
 			  
 	       </div>	
+	       <form id='f1' th:action="@{main}" method="get">
+				<input type='hidden' name='page' th:value=${result.currentPageNum}>
+				<input type='hidden' name='size' th:value=${result.currentPage.pageSize}>
+				<input type='hidden' name='type' th:value=${pageVO.type}>
+				<input type='hidden' name='keyword' th:value=${pageVO.keyword}>
+		  </form>
 </section>
 
 
@@ -59,7 +89,11 @@ var hot = new Handsontable(example, {
 	  startRows: 1,
 	  startCols: 6,
 	  width: '100%',
+	  wordWrap:false,
 	  manualColumnResize: true,
+	  columnSorting: true,
+	  outsideClickDeselects:false,
+	  currentRowClassName: 'currentRow',
 	  columns: [
 				    {data: 'bookCode',},
 				    {data: 'bookTitle'},
@@ -70,7 +104,9 @@ var hot = new Handsontable(example, {
 				    {data: 'pubDate'},
 				    {type: 'checkbox',checkedTemplate: '1',uncheckedTemplate: '0'}
 		   		],
-	  data: JSON.parse(JSON.stringify([[${result.content}]]))
+	colWidths: [100, 500, 130, 200, 100, 80, 100,45],
+	 rowHeights: 23,
+	  data: JSON.parse(JSON.stringify([[${result.listcontent.content}]]))
 	 });
 	 
 function loadData() {
@@ -91,13 +127,40 @@ function loadData() {
      	,
      	complete : function(data) {
 		setTimeout(function(){$('#exampleModal').modal('hide');
-		        	
 		        	}
 		        	,1000);
    		}
 
     });
 }
+
+Handsontable.dom.addEvent(save, 'click', function() {
+	  // save all cell's data
+	  console.log(JSON.stringify({data: hot.getData()}));
+	   $.ajax({
+		  	  url:'/publisher/updBooks',
+		  	headers:{
+				"Content-Type" : "application/json",
+				"X-HTTP-Method-Override" : "POST"
+			},
+		      type:'POST',
+		      contentType : "application/json; charset=UTF-8",
+		      dataType:'json',
+		      data: JSON.stringify({books: hot.getData()}),
+		      success:function (data) {
+			      exampleConsole.innerText  = 'Autosaved (' + change.length + ' ' + 'cell' + (change.length > 1 ? 's' : '') + ')';
+			      autosaveNotification = setTimeout(function() {
+			        exampleConsole.innerText ='Changes will be autosaved';
+			      }, 1000);}
+			});
+	   
+	/*   $.ajax('/publisher/updBooks', 'GET', JSON.stringify({data: change}), function (data) {
+		      exampleConsole.innerText  = 'Autosaved (' + change.length + ' ' + 'cell' + (change.length > 1 ? 's' : '') + ')';
+		      autosaveNotification = setTimeout(function() {
+		        exampleConsole.innerText ='Changes will be autosaved';
+		      }, 1000);
+		    });*/
+});
 
 $('#exampleModal').html('<div class="modal-dialog modal-dialog-centered" role="document"> \
 		  <div class="modal-content"> \
@@ -117,7 +180,42 @@ $('#exampleModal').html('<div class="modal-dialog modal-dialog-centered" role="d
 		  </div> \
 		</div>');
 	
-	
+		var formObj = $("#f1");
+		
+		$(".pagination a").click(function(e) {
+		
+			e.preventDefault();
+		
+			formObj.find('[name="page"]').val($(this).attr('href'));
+		
+			formObj.submit();
+		});
+		
+		$(".boardLink").click(function(e){
+			
+			e.preventDefault(); 
+			
+			var boardNo = $(this).attr("href");
+			
+			formObj.attr("action",[[@{'/boards/view'}]]);
+			formObj.append("<input type='hidden' name='bno' value='" + boardNo +"'>" );
+			
+			formObj.submit();
+			
+		});
+		
+		$("#searchBtn").click(function(e){
+			
+			var typeStr = $("#searchType").find(":selected").val();
+			var keywordStr = $("#searchKeyword").val();
+			
+			console.log(typeStr, "" , keywordStr);
+			
+			formObj.find("[name='type']").val(typeStr);
+			formObj.find("[name='keyword']").val(keywordStr);
+			formObj.find("[name='page']").val("1");
+			formObj.submit();
+		});	
 
 </script>
 </th:block>

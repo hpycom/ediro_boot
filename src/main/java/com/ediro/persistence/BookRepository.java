@@ -6,6 +6,8 @@ import java.util.List;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.web.config.QuerydslWebConfiguration;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import com.ediro.domain.Book;
 
@@ -24,9 +26,12 @@ public interface BookRepository extends CrudRepository<Book, String>,
 QuerydslPredicateExecutor<Book>{
 
 	public default Predicate makePredicate(String Type,String keyword) {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+	    String name = auth.getName(); 
+		
 		BooleanBuilder builder = new BooleanBuilder();
 		QBook book = QBook.book;
-		builder.and(book.bookCode.gt(0));
+		builder.and(book.member.memberID.eq(name));
 		return builder;
 	}
 	
