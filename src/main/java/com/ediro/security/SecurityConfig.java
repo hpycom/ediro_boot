@@ -51,7 +51,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.logout().invalidateHttpSession(true);
         
         http.logout().logoutUrl("/logout").logoutSuccessUrl("/").invalidateHttpSession(true); 
-        
+      //  http
+      //  .csrf().disable();
        
       //  http.csrf().requireCsrfProtectionMatcher(new AntPathRequestMatcher("**/login")).and().authorizeRequests()
 	//	.antMatchers("/manager/**").hasRole("MANAGER")

@@ -5,6 +5,8 @@
 <head>
     <title  layout:title-pattern="$LAYOUT_TITLE - $CONTENT_TITLE">EDIRO</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta id="_csrf" name="_csrf" th:content="${_csrf.token}"/>
+	<meta id="_csrf_header" name="_csrf_header" th:content="${_csrf.headerName}"/>
     <link rel="stylesheet"  th:href="@{/webjars/handsontable/6.0.0/handsontable.full.min.css}" media="screen" />
  
     <link th:href="@{/webjars/bootstrap/4.1.1/css/bootstrap.min.css}" rel="stylesheet" media="screen"  />
@@ -109,6 +111,9 @@
 			    
 		
 		    });
+		    
+		    var token = $('#_csrf').attr('content');
+		    var header = $('#_csrf_header').attr('content');
 			  //]]>
     </script>
 <th:block layout:fragment="script"></th:block>

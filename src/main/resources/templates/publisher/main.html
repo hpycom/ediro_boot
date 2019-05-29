@@ -136,17 +136,18 @@ function loadData() {
 
 Handsontable.dom.addEvent(save, 'click', function() {
 	  // save all cell's data
-	  console.log(JSON.stringify({data: hot.getData()}));
+	  console.log(JSON.stringify({data: hot.getSourceData()}));
 	   $.ajax({
 		  	  url:'/publisher/updBooks',
-		  	headers:{
-				"Content-Type" : "application/json",
-				"X-HTTP-Method-Override" : "POST"
-			},
-		      type:'POST',
+		  	  type:'POST',
 		      contentType : "application/json; charset=UTF-8",
 		      dataType:'json',
-		      data: JSON.stringify({books: hot.getData()}),
+		      data:JSON.stringify({data: hot.getSourceData()}),
+		      beforeSend: function(xhr) {
+                  xhr.setRequestHeader(header, token);
+              },
+		      cache:false,
+		      processData:false,
 		      success:function (data) {
 			      exampleConsole.innerText  = 'Autosaved (' + change.length + ' ' + 'cell' + (change.length > 1 ? 's' : '') + ')';
 			      autosaveNotification = setTimeout(function() {
