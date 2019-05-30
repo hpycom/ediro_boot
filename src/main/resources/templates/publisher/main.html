@@ -106,7 +106,8 @@ var hot = new Handsontable(example, {
 		   		],
 	colWidths: [100, 500, 130, 200, 100, 80, 100,45],
 	 rowHeights: 23,
-	  data: JSON.parse(JSON.stringify([[${result.listcontent.content}]]))
+	  data: JSON.parse(JSON.stringify([[${result.listcontent.content}]])),
+	  fillHandle: false
 	 });
 	 
 function loadData() {
@@ -153,7 +154,10 @@ Handsontable.dom.addEvent(save, 'click', function() {
               },
 		      success:function (data) {
 		    	alert(data);
-		      }
+		      },
+		      error:function(request,status,error){
+		            alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+		        }
 	  });
 	
 });
