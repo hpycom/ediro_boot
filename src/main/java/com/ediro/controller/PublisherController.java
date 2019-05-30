@@ -65,12 +65,12 @@ public class PublisherController {
    
 
  // @PostMapping("/updBooks")
- // @ResponseBody
-   @RequestMapping(value="updBooks",  method= {RequestMethod.POST,RequestMethod.GET})
-   public ModelAndView updBooks( @RequestBody  BooksVO name,RedirectAttributes rttr,Principal principal) {
+   
+   @RequestMapping(value="updBooks",  method= RequestMethod.POST,consumes="application/json")
+   public @ResponseBody  String updBooks( @RequestBody  BooksVO name,RedirectAttributes rttr,Principal principal) {
 		   log.info("" + name);
 		   
-		   return null;
+		   return "asdf";
 		 
    }
 	   
