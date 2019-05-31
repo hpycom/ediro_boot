@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -44,7 +45,7 @@ public class BookOrderController {
 	
 
 	@GetMapping("/booklist")
-	public ResponseEntity<List<Book>> getBookList(Principal principal)
+	public ResponseEntity<List<Book>> getBookList(@AuthenticationPrincipal EdiroSecurityUser user)
 	{
 		/*Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal(); 
 		UserDetails userDetails = (UserDetails)principal;
@@ -59,7 +60,7 @@ public class BookOrderController {
 	   	*/
 	  // String user_id = "pubcom";
 	   
-	   List<Book> bookList = bookService.getBooks(principal.getName());	 //(List<Book>) bookrepo.findAll();
+	   List<Book> bookList = bookService.getBooks(user.getMember().getMemberID());	 //(List<Book>) bookrepo.findAll();
 	
 	   return new ResponseEntity<>(bookList,HttpStatus.OK);
 	}
