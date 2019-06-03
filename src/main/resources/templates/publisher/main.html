@@ -85,7 +85,7 @@
 var hot = new Handsontable(example, {
 	  rowHeaders: true,
 	  colHeaders: true,
-	  colHeaders: ['bookCode', '도서명', '바코드', '저자','출판사','정가','발행일'],
+	  colHeaders: ['코드', '도서명', '바코드', '저자','출판사','정가','발행일','변경'],
 	  startRows: 1,
 	  startCols: 6,
 	  width: '100%',
@@ -102,12 +102,23 @@ var hot = new Handsontable(example, {
 				    {data: 'publisher'},
 				    {data: 'price', type: 'numeric',numericFormat:{pattern: '0,0'}},
 				    {data: 'pubDate'},
-				    {type: 'checkbox',checkedTemplate: '1',uncheckedTemplate: '0'}
+				    {data: 'chk' ,type: 'checkbox',checkedTemplate: '1',uncheckedTemplate: '0', readOnly: true}
 		   		],
 	colWidths: [100, 500, 130, 200, 100, 80, 100,45],
 	 rowHeights: 23,
 	  data: JSON.parse(JSON.stringify([[${result.listcontent.content}]])),
-	  fillHandle: false
+	  fillHandle: false,
+	  afterChange: function (changes){
+		  if(changes)
+			  {
+				    changes.forEach(([row, prop, oldValue, newValue]) => {
+				    if(prop =="chk")
+				    	return;
+				     hot.setDataAtCell(row, 7, 1);
+				     console.log(row);
+				    });
+			  }
+	  }
 	 });
 	 
 function loadData() {
@@ -139,7 +150,7 @@ Handsontable.dom.addEvent(save, 'click', function() {
 	  // save all cell's data
 	  //console.log(JSON.stringify({data: hot.getSourceData()}));
 	  var dataSrc = hot.getSourceData();
-	  var updDataSrc = dataSrc.filter(function(data){return data.bookCode > 561;});
+	  var updDataSrc = dataSrc.filter(function(data){return data.chk == 1;});
 	  //console.log(updDataSrc);
 	  
 	 //console.log({data:hot.getSourceData()}.filter(data => data.bookCode > 20));
@@ -154,6 +165,13 @@ Handsontable.dom.addEvent(save, 'click', function() {
               },
 		      success:function (data) {
 		    	alert(data);
+		    	
+		    	var htRCnt = hot.countRows();
+		    	for(var i=0;i<htRCnt;i++)
+		    	{
+		    		if(hot.getDataAtCell(i,7) == 1)
+		    	   		hot.setDataAtCell(i, 7, 0);
+		    	}
 		      },
 		      error:function(request,status,error){
 		            alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
