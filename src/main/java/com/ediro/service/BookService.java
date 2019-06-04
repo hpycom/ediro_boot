@@ -39,11 +39,11 @@ public class BookService {
 		bookRepository.save(book);
 	}
 	
-	public Page<Book> getBooks(PageVO vo)
+	public Page<Book> getBooks(PageVO vo,Book book)
 	{
 		Pageable page = vo.makePageable(0, "bookCode");
 		
-		Page<Book> result = bookRepository.findAll(bookRepository.makePredicate(null, null), page);
+		Page<Book> result = bookRepository.findAll(bookRepository.makePredicate(book), page);
 		
 		return result;
 	}

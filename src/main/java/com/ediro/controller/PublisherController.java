@@ -40,10 +40,10 @@ public class PublisherController {
    BookService bookSrv;
    
    @GetMapping("/main")
-   public void main(Principal principal,Model model,PageVO pageVO) {
+   public void main(Principal principal,Model model,PageVO pageVO,@ModelAttribute("book")Book book) {
 	   
 	 
-	   Page<Book> result = bookSrv.getBooks(pageVO);
+	   Page<Book> result = bookSrv.getBooks(pageVO,book);
 	   
 	  // List<Book> bookList = bookSrv.getBooks(principal.getName());	
 	   

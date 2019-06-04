@@ -50,7 +50,7 @@ public class PageMaker<T> {
 		
 		Pageable startPage = this.currentPage;
 		
-		//move to start Pageble 
+		//move to start Pagable 
 		for(int i = startNum; i < this.currentPageNum; i++){
 			startPage = startPage.previousOrFirst();
 		}

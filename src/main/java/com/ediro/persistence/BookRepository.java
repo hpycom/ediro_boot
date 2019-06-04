@@ -25,14 +25,21 @@ import com.ediro.domain.QBook;
 public interface BookRepository extends CrudRepository<Book, String>,
 QuerydslPredicateExecutor<Book>{
 
-	public default Predicate makePredicate(String Type,String keyword) {
+	public default Predicate makePredicate(Book bookVO) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 	    String name = auth.getName(); 
 		
 		BooleanBuilder builder = new BooleanBuilder();
 		QBook book = QBook.book;
 		builder.and(book.member.memberID.eq(name));
-		return builder;
+		
+		if(bookVO.getBookTitle() != null && !bookVO.getBookTitle().isEmpty())
+			builder.and(book.bookTitle.contains(bookVO.getBookTitle()));
+		
+		if(bookVO.getBarcode() != null && !bookVO.getBarcode().isEmpty())
+			builder.and(book.barcode.contains(bookVO.getBarcode()));
+		
+			return builder;
 	}
 	
 	public List<Book> findByBookTitleContaining(String title);

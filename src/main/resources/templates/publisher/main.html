@@ -30,6 +30,25 @@
 	    <br/>
 	  <div class="small-12 medium-9 columns" >
 	    <pre id="example1console" class="console">Click "Load" to load data from server</pre>
+			
+			 <form id='f1' th:action="@{main}" method="get" autocomplete="off">
+					<div class="row justify-content-start" >
+						   <div class="form-group col-md-2">
+							    <label for="barcode">ISBN(ISSN)</label>
+							    <input type="text" class="form-control form-control-sm" id="barcode" name="barcode" maxlength="13" th:value=${book.barcode}>
+					       </div>
+					  	  <div class="form-group col-md-6">
+							    <label for="bookTitle">도서명</label>
+							    <input type="text" class="form-control form-control-sm" id="bookTitle" name="bookTitle" th:value=${book.bookTitle} >
+						  </div>
+						   <button id="searchBtn">search</button>
+					</div>
+					<input type='hidden' name='page' th:value=${result.currentPageNum}>
+					<input type='hidden' name='size' th:value=${result.currentPage.pageSize}>
+				<!--  	<input type='hidden' name='type' th:value=${pageVO.type}>
+					<input type='hidden' name='keyword' th:value=${pageVO.keyword}> -->
+		  	 </form>
+			
 			<div style = "width:100%;height:600px;overflow:hidden;">
 				<div id="example"></div>
 			</div>
@@ -70,12 +89,7 @@
 			<div class="modal" id="exampleModal" data-backdrop="static" tabindex="-1" role="dialog"  aria-labelledby="exampleModalLabel" aria-hidden="true">
 			  
 	       </div>	
-	       <form id='f1' th:action="@{main}" method="get">
-				<input type='hidden' name='page' th:value=${result.currentPageNum}>
-				<input type='hidden' name='size' th:value=${result.currentPage.pageSize}>
-				<input type='hidden' name='type' th:value=${pageVO.type}>
-				<input type='hidden' name='keyword' th:value=${pageVO.keyword}>
-		  </form>
+	      
 </section>
 
 
@@ -228,9 +242,7 @@ $('#exampleModal').html('<div class="modal-dialog modal-dialog-centered" role="d
 			var keywordStr = $("#searchKeyword").val();
 			
 			console.log(typeStr, "" , keywordStr);
-			
-			formObj.find("[name='type']").val(typeStr);
-			formObj.find("[name='keyword']").val(keywordStr);
+		
 			formObj.find("[name='page']").val("1");
 			formObj.submit();
 		});	
