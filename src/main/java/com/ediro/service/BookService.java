@@ -15,6 +15,7 @@ import com.ediro.domain.Book;
 import com.ediro.domain.Member;
 import com.ediro.persistence.BookRepository;
 import com.ediro.persistence.MemberRepository;
+import com.ediro.vo.BooksVO;
 import com.ediro.vo.PageVO;
 import com.querydsl.core.types.Predicate;
 
@@ -37,6 +38,18 @@ public class BookService {
 		Optional<Member> member = memberRepository.findById(principal.getName());
 		book.setMember(member.get());
 		bookRepository.save(book);
+	}
+	
+	public void save(BooksVO books,Principal principal)
+	{
+		Optional<Member> member = memberRepository.findById(principal.getName());
+		//List<Book> lstBooks = books.getData();
+		
+		for(Book book :books.getData())
+		{
+			book.setMember(member.get());
+			bookRepository.save(book);
+		}
 	}
 	
 	public Page<Book> getBooks(PageVO vo,Book book)

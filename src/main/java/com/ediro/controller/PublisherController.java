@@ -69,7 +69,7 @@ public class PublisherController {
    @RequestMapping(value="updBooks",  method= RequestMethod.POST,consumes="application/json")
    public @ResponseBody  String updBooks( @RequestBody  BooksVO name,RedirectAttributes rttr,Principal principal) {
 		   log.info("" + name);
-		   
+		   bookSrv.save(name, principal);
 		   return "asdf";
 		 
    }

@@ -109,19 +109,23 @@ var hot = new Handsontable(example, {
 	  outsideClickDeselects:false,
 	  currentRowClassName: 'currentRow',
 	  columns: [
-				    {data: 'bookCode',},
+				    {data: 'bookCode', readOnly: true},
 				    {data: 'bookTitle'},
 				    {data: 'barcode'},
 				    {data: 'author'},
 				    {data: 'publisher'},
 				    {data: 'price', type: 'numeric',numericFormat:{pattern: '0,0'}},
-				    {data: 'pubDate'},
+				    {data: 'pubDate', type: 'date',dateFormat: 'YYYY-MM-DD'},
 				    {data: 'chk' ,type: 'checkbox',checkedTemplate: '1',uncheckedTemplate: '0', readOnly: true}
 		   		],
 	colWidths: [100, 500, 130, 200, 100, 80, 100,45],
 	 rowHeights: 23,
 	  data: JSON.parse(JSON.stringify([[${result.listcontent.content}]])),
-	  fillHandle: false,
+	  fillHandle:false,
+	  allowInsertRow:false,
+	    allowManualInsertRow:false,
+	    allowInsertColumn:false,
+	    allowManualInsertColumn:false,
 	  afterChange: function (changes){
 		  if(changes)
 			  {
@@ -165,6 +169,8 @@ Handsontable.dom.addEvent(save, 'click', function() {
 	  //console.log(JSON.stringify({data: hot.getSourceData()}));
 	  var dataSrc = hot.getSourceData();
 	  var updDataSrc = dataSrc.filter(function(data){return data.chk == 1;});
+	  if(updDataSrc.length ==0)
+		  return;
 	  //console.log(updDataSrc);
 	  
 	 //console.log({data:hot.getSourceData()}.filter(data => data.bookCode > 20));
@@ -178,7 +184,7 @@ Handsontable.dom.addEvent(save, 'click', function() {
                   xhr.setRequestHeader(header, token);
               },
 		      success:function (data) {
-		    	alert(data);
+		    	alert("수정되었습니다.");
 		    	
 		    	var htRCnt = hot.countRows();
 		    	for(var i=0;i<htRCnt;i++)
