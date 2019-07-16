@@ -50,7 +50,9 @@
 		  	 </form>
 			
 			<div style = "width:100%;height:600px;overflow:hidden;">
-				<div id="example"></div>
+				
+					<div id="example"></div>
+				
 			</div>
 			
 			<nav>
@@ -97,6 +99,7 @@
 <script th:inline="javascript">
 
 var hot = new Handsontable(example, {
+	  licenseKey: 'non-commercial-and-evaluation',
 	  rowHeaders: true,
 	  colHeaders: true,
 	  colHeaders: ['코드', '도서명', '바코드', '저자','출판사','정가','발행일','변경'],
@@ -118,7 +121,7 @@ var hot = new Handsontable(example, {
 				    {data: 'pubDate', type: 'date',dateFormat: 'YYYY-MM-DD'},
 				    {data: 'chk' ,type: 'checkbox',checkedTemplate: '1',uncheckedTemplate: '0', readOnly: true}
 		   		],
-	colWidths: [100, 500, 130, 200, 100, 80, 100,45],
+	 colWidths: [100, 500, 130, 200, 100, 80, 100,45],
 	 rowHeights: 23,
 	  data: JSON.parse(JSON.stringify([[${result.listcontent.content}]])),
 	  fillHandle:false,
@@ -156,9 +159,7 @@ function loadData() {
         }
      	,
      	complete : function(data) {
-		setTimeout(function(){$('#exampleModal').modal('hide');
-		        	}
-		        	,1000);
+			setTimeout( function(){$('#exampleModal').modal('hide');},1000 );
    		}
 
     });
@@ -168,11 +169,19 @@ Handsontable.dom.addEvent(save, 'click', function() {
 	  // save all cell's data
 	  //console.log(JSON.stringify({data: hot.getSourceData()}));
 	  var dataSrc = hot.getSourceData();
+	 dataSrc.forEach(function(element,index){
+		 if(element.bookTitle == "")
+			 {
+			 	alert('도서명을 입력해 주세요');
+			   hot.selectCell(index,1);
+			   return;
+			 }
+	 })
 	  var updDataSrc = dataSrc.filter(function(data){return data.chk == 1;});
 	  if(updDataSrc.length ==0)
 		  return;
-	  //console.log(updDataSrc);
-	  
+	  console.log(updDataSrc);
+	  return;
 	 //console.log({data:hot.getSourceData()}.filter(data => data.bookCode > 20));
 	  $.ajax({
 		  	  url:'/publisher/updBooks',
