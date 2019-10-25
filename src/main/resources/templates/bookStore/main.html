@@ -21,11 +21,17 @@
 <hr />
 <div id="example"></div>
 <button onclick="javascript:loadData();">load</button>
+  <!-- Modal -->
+			<div class="modal" id="exampleModal" data-backdrop="static" tabindex="-1" role="dialog"  aria-labelledby="exampleModalLabel" aria-hidden="true">
+			  
+	       </div>	
+	       
 </section>
 
 
 <th:block layout:fragment="script">
 <script th:inline="javascript">
+var fRow,fCol;
 
 var hot = new Handsontable(example, {
 	  rowHeaders: true,
@@ -33,6 +39,8 @@ var hot = new Handsontable(example, {
 	  colHeaders: ['bookCode', '도서명', '바코드', '저자','출판사','정가'],
 	  startRows: 1,
 	  startCols: 6,
+	  fillHandle:false,
+	  selectionMode: 'single',
 	  columns: [
 				    {data: 'bookCode',},
 				    {data: 'bookTitle'},
@@ -41,7 +49,24 @@ var hot = new Handsontable(example, {
 				    {data: 'publisher'},
 				    {data: 'price', type: 'numeric',numericFormat:{pattern: '0,0'}},
 				    {type: 'checkbox',checkedTemplate: '1',uncheckedTemplate: '0'}
-		   		]
+		   		],
+ 		hiddenColumns: {
+ 		    columns: [0],
+ 		    indicators: true
+ 		  },
+ 		 afterSelection: (row, column, row2, column2, preventScrolling, selectionLayerLevel) => {
+ 			 fCol = column;
+ 		 	fRow = row;
+ 		  },
+     beforeKeyDown:function(event){
+    	
+    	if(event.keyCode == 13)
+    		{
+    		    hot.deselectCell();
+    			$('#exampleModal').modal('show');
+    			
+    		}
+     }
 	 });
 	 
 function loadData() {
@@ -60,10 +85,34 @@ function loadData() {
 	
 
 </script>
-</th:block>
 
+<script th:inline="javascript">
+$('#exampleModal').html('<div class="modal-dialog modal-dialog-centered" role="document"> \
+		  <div class="modal-content"> \
+			<div class="modal-header"> \
+	        <h5 class="modal-title" id="exampleModalLabel">ediro</h5> \
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close"> \
+	          <span aria-hidden="true">&times;</span> \
+	        </button> \
+		      </div> \
+		      <div class="modal-body"> \
+		       <input type="text" id="inputTest" name="inputTest" class="form-control text-uppercase" placeholder="Descripci&oacute;n" autofocus/> \
+		      </div> \
+		      <div class="modal-footer"> \
+		        <button type="button" id="btnCloseMdl" class="btn btn-secondary" data-dismiss="modal">Close</button> \
+		      </div> \
+		    </div> \
+		  </div> \
+		</div>');
 
+$('#exampleModal').on('hidden.bs.modal', function () {
+	hot.selectCell(fRow, fCol);
+});
 
+$('#exampleModal').on('shown.bs.modal', function () {
+    $('#inputTest').focus();
+});
+</script>
  
    
 </body>

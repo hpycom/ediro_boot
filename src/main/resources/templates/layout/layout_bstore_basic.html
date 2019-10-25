@@ -3,15 +3,23 @@
        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 
 <head>
-    <title  layout:title-pattern="$LAYOUT_TITLE - $CONTENT_TITLE">EDIRO</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <link rel="stylesheet"  th:href="@{/webjars/handsontable/6.0.0/handsontable.full.min.css}" media="screen" />
- 
+    <meta id="_csrf" name="_csrf" th:content="${_csrf.token}"/>
+	<meta id="_csrf_header" name="_csrf_header" th:content="${_csrf.headerName}"/>
     <link rel="stylesheet"  th:href="@{/handsontable_7_0_3/handsontable.full.min.css}" media="screen" />
+ 
+    <link th:href="@{/webjars/bootstrap/4.1.1/css/bootstrap.min.css}" rel="stylesheet" media="screen"  />
     <link rel="stylesheet" th:href="@{/css/main.css}" />
      <style type="text/css">
         body { font-family: Arial, "맑은 고딕" ; }
 		input.htCheckboxRendererInput{ margin: 3; }
+		.currentRow {
+		    background-color: #E7E8EF !important;
+		}
+		.currentCol {
+		  background-color: #E7E8EF !important;
+		}
+
 	</style>
 </head>
 

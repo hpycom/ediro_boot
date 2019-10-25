@@ -28,8 +28,9 @@ public class BookService {
 	@Autowired
 	MemberRepository memberRepository;
 	
-	public List<Book> getBooks(String memberid){
-		 List<Book> bookList =	(List<Book>) bookRepository.findByMember_MemberID(memberid);
+	public List<Book> getBooks(){
+		// List<Book> bookList =	(List<Book>) bookRepository.findByMember_MemberID(memberid);
+		 List<Book> bookList =	(List<Book>) bookRepository.findAll();
 		 return bookList;
 	}
 	

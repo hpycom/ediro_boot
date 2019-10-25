@@ -60,8 +60,9 @@ public class BookOrderController {
 	   	*/
 	  // String user_id = "pubcom";
 	   
-	   List<Book> bookList = bookService.getBooks(user.getMember().getMemberID());	 //(List<Book>) bookrepo.findAll();
-	
+	   //List<Book> bookList = bookService.getBooks(user.getMember().getMemberID());	 //(List<Book>) bookrepo.findAll();
+	   List<Book> bookList = bookService.getBooks();
+	   
 	   return new ResponseEntity<>(bookList,HttpStatus.OK);
 	}
 	
