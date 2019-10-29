@@ -1,5 +1,15 @@
 package com.ediro.vo;
 
-public class BookVO {
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
+public class BookVO {
+	private String bookTitle;
+	private String barcode;
+	private String author;
+	private String publisher;
+	private String pubDate;
 }

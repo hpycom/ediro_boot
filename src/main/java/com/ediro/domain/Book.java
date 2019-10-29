@@ -47,6 +47,8 @@ public class Book {
     private int price;
     private String pubDate;
     private int dcPercent;// 할인율
+    @Transient
+    private int chk;
     
     @ManyToOne
     @JoinColumn(name = "memberid")

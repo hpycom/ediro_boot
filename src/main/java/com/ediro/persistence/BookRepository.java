@@ -1,6 +1,7 @@
 package com.ediro.persistence;
 
 
+import java.math.BigInteger;
 import java.util.List;
 
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
@@ -22,8 +23,7 @@ import com.ediro.domain.QBook;
  * @Date 2017-12-24
  * @GitHub : https://github.com/
  */
-public interface BookRepository extends CrudRepository<Book, String>,
-QuerydslPredicateExecutor<Book>{
+public interface BookRepository extends CrudRepository<Book, String>,QuerydslPredicateExecutor<Book>{
 
 	public default Predicate makePredicate(Book bookVO) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -44,4 +44,5 @@ QuerydslPredicateExecutor<Book>{
 	
 	public List<Book> findByBookTitleContaining(String title);
 	public List<Book> findByMember_MemberID(String memberID);
+	public Book findBybookCode(BigInteger book_code);
 }
