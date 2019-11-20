@@ -37,9 +37,11 @@ import java.util.List;
 @ToString
 public class Member {
 
-
-    @Id
- 	private String memberID;
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	private int mid;  
+ 
+    private String memberID;
 	private String memberPwd;
 	private String companyName;
 	private String bossName;
@@ -63,7 +65,7 @@ public class Member {
 	@UpdateTimestamp
 	private LocalDateTime updatedate;
 	
-	@OneToMany(mappedBy="member",fetch = FetchType.LAZY)
+	@OneToMany(mappedBy="member",fetch = FetchType.EAGER)
 	private List<MemberRole> memberRoles = new ArrayList<>();
 	
 	public void addRole(MemberRole memberRole)

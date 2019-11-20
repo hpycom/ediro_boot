@@ -31,7 +31,8 @@ public class Basket {
 	private BigInteger basket_id;
 	
 	@OneToOne
-	@JoinColumn(name="memberid")
+	@JoinColumn(name="mid")
+	@JsonIgnore
 	private Member member;
 	
 	@OneToOne

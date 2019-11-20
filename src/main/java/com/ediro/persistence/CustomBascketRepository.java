@@ -6,10 +6,12 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 
 import com.ediro.domain.Basket;
 import com.ediro.domain.Member;
-import com.ediro.security.EdiroSecurityUser;;
+import com.ediro.security.EdiroSecurityUser;
+import com.ediro.vo.CusBasketVO;;
 
 
 public interface CustomBascketRepository {
-	public List<Basket> search(Member member,@AuthenticationPrincipal EdiroSecurityUser user);
+	public List<CusBasketVO> search(@AuthenticationPrincipal EdiroSecurityUser user);
+	
 }
 

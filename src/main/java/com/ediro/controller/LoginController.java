@@ -50,7 +50,7 @@ public class LoginController {
 			     
 			    });
        }
-		   return "index";
+		   return "login";
    }
    @GetMapping("/accessDenied")
    public void accessDenied() {

@@ -1,6 +1,7 @@
 package com.ediro.service;
 
 import java.security.Principal;
+import java.util.List;
 import java.util.Optional;
 
 import javax.jdo.annotations.Transactional;
@@ -17,13 +18,14 @@ import com.ediro.persistence.BookRepository;
 import com.ediro.persistence.CustomBascketRepository;
 import com.ediro.persistence.MemberRepository;
 import com.ediro.security.EdiroSecurityUser;
+import com.ediro.vo.BasketVO;
 import com.ediro.vo.BasketsVO;
+import com.ediro.vo.CusBasketVO;
 
 
 @Service
 public class BookOrderService {
-	@Autowired
-	CustomBascketRepository cBasketRepo;
+	
 	@Autowired
 	BasketRepository basketRepo;
 	@Autowired
@@ -37,7 +39,7 @@ public class BookOrderService {
 		bookBascket.getListBascket().forEach(basketvo ->{
 			Basket basket = new Basket();
 		    Book book=	bookRepo.findBybookCode(basketvo.getBook_code());
-		    Member mem=	memberRepo.findById(user.getMember().getMemberID()).orElse(null);
+		    Member mem=	memberRepo.findByMemberID(user.getMember().getMemberID()).orElse(null);
 			
 		    basket.setBook(book);
 			basket.setMember(mem);
@@ -51,5 +53,10 @@ public class BookOrderService {
 		});
 		
 		return bookBascket;
+	}
+	
+	public List<CusBasketVO> getListBasket(@AuthenticationPrincipal EdiroSecurityUser user)
+	{
+		return basketRepo.search(user);
 	}
 }

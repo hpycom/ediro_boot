@@ -29,12 +29,11 @@ public class ediroUsersService implements UserDetailsService{
     private MemberRepository memberRepository;
 	
 	@Override
-	@Transactional
 	    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 	   
 		  log.info("## request loadUserByUserName userName : " + username);
 
-	      return   memberRepository.findById(username).filter(m->m!=null).map(m-> new EdiroSecurityUser(m)).get();
+	      return   memberRepository.findByMemberID(username).filter(m->m!=null).map(m-> new EdiroSecurityUser(m)).get();
 	       
 	    }
 

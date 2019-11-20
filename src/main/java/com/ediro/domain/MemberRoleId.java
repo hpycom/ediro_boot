@@ -8,6 +8,6 @@ import lombok.EqualsAndHashCode;
 public class MemberRoleId implements Serializable {
 
 
-private String member;
+private int member;
 private int roles;
 }

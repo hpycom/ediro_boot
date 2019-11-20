@@ -14,13 +14,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.ediro.domain.Basket;
 import com.ediro.domain.Book;
+import com.ediro.persistence.BasketRepository;
 import com.ediro.security.EdiroSecurityUser;
 import com.ediro.service.BookOrderService;
 import com.ediro.service.BookService;
 import com.ediro.service.BookServiceCustom;
 import com.ediro.vo.BasketsVO;
 import com.ediro.vo.BookVO;
+import com.ediro.vo.CusBasketVO;
 
 import lombok.extern.java.Log;
 
@@ -36,7 +39,9 @@ public class BookOrderController {
 	BookServiceCustom bookSrvCus;
 	@Autowired
 	BookOrderService bookOrdSrv;
-
+    @Autowired
+    BasketRepository basRepo;
+    
 	@GetMapping("/booklist")
 	public ResponseEntity<List<Book>> getBookList(@AuthenticationPrincipal EdiroSecurityUser user)
 	{
@@ -81,4 +86,25 @@ public class BookOrderController {
 	   return new ResponseEntity<>(bascketsVO,HttpStatus.OK);
 	}
 	
+	//@RequestMapping(value = "/listBasket", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+	//@ResponseBody
+	/*@GetMapping("/listBasket")
+	public ResponseEntity<List<Basket>> listBascket(@AuthenticationPrincipal EdiroSecurityUser user)
+	{
+		
+		
+	   List<Basket> lbasket = basRepo.findAllByMember_memberID(user.getUsername());
+	   
+	   return new ResponseEntity<>(lbasket,HttpStatus.OK);
+	}
+	*/
+	@GetMapping("/listBasket")
+	public ResponseEntity<List<CusBasketVO>> listBascket(@AuthenticationPrincipal EdiroSecurityUser user)
+	{
+		
+		
+	   List<CusBasketVO> lbasket = bookOrdSrv.getListBasket(user);
+	   
+	   return new ResponseEntity<>(lbasket,HttpStatus.OK);
+	}
 }

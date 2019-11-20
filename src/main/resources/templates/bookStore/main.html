@@ -22,7 +22,7 @@
 
 <hr />
 <div id="example"></div>
-<button onclick="javascript:loadData();">load</button>
+<button onclick="javascript:loadBasket();">basketLoadTest</button>
   <!-- Modal -->
 		   <div class="modal" id="exampleModal" data-backdrop="static" tabindex="-1" role="dialog"   aria-hidden="true">
 			  <div class="modal-dialog modal-dialog-centered modal-xl"> 
@@ -35,19 +35,21 @@
 				    </div> 
 				      <div class="modal-body modal-xl"> 
 				       <div class="row justify-content-start" >
+				     
 						   <div class="form-group col-md-4">
-							 
-				           		<input type="text" class="form-control form-control-sm" id="txtBookTitle" name="txtBookTitle" placeHolder="도서명" />
+					       		<input type="text" autocomplete="off" class="form-control form-control-sm" id="inputBookTitle" name="inputBookTitle"  />
 				           </div>
 					  	   <div class="form-group col-md-4">
-					       		<input type="text" class="form-control form-control-sm" id="txtBarcode" name="txtBarcode" placeHolder="ISBN" />
+					       		<input type="text" autocomplete="off" class="form-control form-control-sm" id="txtBarcode" name="txtBarcode" placeHolder="ISBN" />
 				           </div>
 				             <div class="form-group col-md-2">
 				           <button id="searchBtn">search</button>
 				           </div>
+				      
 				       </div> 
-				        
+				        <div >
 				       <div id="divBookSch"></div>
+				       </div>
 				      </div>
 				      <div class="modal-footer modal-xl"> 
 				        <button type="button" id="btnCloseMdl" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -113,8 +115,9 @@ var hot = new Handsontable(example, {
     		{
     		   hot.deselectCell();
     		   var data = hot.getDataAtCell(fRow,fCol);
-    		    $('input[name=txtBookTitle]').val(data);
+    		   $('input[name=inputBookTitle]').val(data);
     			$('#exampleModal').modal('show');
+    			 
     			//event.preventDefault();
     			event.stopPropagation();
     		}
@@ -129,17 +132,18 @@ var hot = new Handsontable(example, {
      }
 	 });
 	 
-function loadData() {
-    $.ajax({
-        url: '/bookOrder/booklist',
-        type: 'get',
-        dataType: 'json',
-        async: true,
-        success: function(res) {
-        	 hot.loadData(res);
-        }
-    });
-}
+
+    function loadBasket() {
+        $.ajax({
+            url: '/bookOrder/listBasket',
+            type: 'get',
+            dataType: 'json',
+            async: true,
+            success: function(res) {
+            	 hot.loadData(res);
+            }
+        });
+};
 
 
 	
@@ -156,7 +160,7 @@ var datahot =  {
 		  rowHeaders: true,
 		  colHeaders: true,
 		  colHeaders: ['선택','bookCode', '도서명', '바코드', '저자','출판사','정가'],
-		  startRows: 1,
+		  startRows: 0,
 		  startCols: 6,
 		  fillHandle:false,
 		  currentRowClassName: 'currentRow',
@@ -197,6 +201,8 @@ var datahot =  {
 			    		    {
 			    		    	chkArrData.forEach(function(item){
 			    		    		
+			    		    		console.log(item["bookCode"]);
+			    		    		hot.setDataAtCell(tRow,0,'0');
 					    		    hot.setDataAtCell(tRow,1,item["bookCode"]);
 					    		    hot.setDataAtCell(tRow,2,item["bookTitle"]);
 					    		    hot.setDataAtCell(tRow,3,item["barcode"]);
@@ -220,14 +226,16 @@ var datahot =  {
 			    		    	 event.stopPropagation();
 			    		    	 
 			    		    	 //console.log(arrBookItem);
-			    		    	 addBascket(arrBookItem);
+			    		    	// addBascket(arrBookItem);
 			    		    }
 			    		    else
 			    		    {
+			    		    	console.log(vRow);
 				    		    var data = hotBookSch.getDataAtRow(vRow);
 			    				
 				    		    if(data.length>0)
 			    				{
+				    		    	hot.setDataAtCell(tRow,0,'0');
 					    		    hot.setDataAtCell(tRow,1,data[1]);
 					    		    hot.setDataAtCell(tRow,2,data[2]);
 					    		    hot.setDataAtCell(tRow,3,data[3]);
@@ -251,6 +259,7 @@ var datahot =  {
 		    		{
 		    			console.log(event.keyCode);
 		    			var chkdata = hotBookSch.getDataAtCell(vRow,0);
+		    			
 		    			if(chkdata == 0)
 		    				hotBookSch.setDataAtCell(vRow, 0, 1);
 		    			else
@@ -272,22 +281,25 @@ $('#exampleModal').on('hide.bs.modal', function () {
 });
 
 $('#exampleModal').on('shown.bs.modal', function () {
-	hotBookSch = new Handsontable(divBookSch,datahot);	
+	hotBookSch = new Handsontable(divBookSch,datahot);
+	
 	loadDataBookSch();
 });
 
-$("input[name=txtBookTitle]").keydown(function(key) {
+$("input[name=inputBookTitle]").keydown(function(event) {
 	 
-    if(key.keyCode == 13){//키가 13이면 실행 (엔터는 13)
+	  console.log(event.keyCode);
+    if(event.keyCode == 13){//키가 13이면 실행 (엔터는 13)
     	loadDataBookSch();
         return false;
-    }
-	return true;
+   }
+   return true;
+  
 });
 //팝업 도서 목록 가져오기
 function loadDataBookSch() {
 	
-	var schBookTitle = $("input[name=txtBookTitle]").val();
+	var schBookTitle = $("input[name=inputBookTitle]").val();
 	var schBarCode = $("input[name=txtBarcode]").val();
 	
 	var bookVO = {bookTitle:schBookTitle,barcode:schBarCode};
@@ -306,16 +318,33 @@ function loadDataBookSch() {
         	  xhr.setRequestHeader(header, token);
         	},
         success: function(res) {
-        	hotBookSch.loadData(res);
-        	var hotRowCnt = hotBookSch.countRows();
-        	console.log(hotRowCnt);
-        	
-        	if(hotRowCnt > 0)
+        
+        	console.log(res);
+        	if(res.length > 0)
         	{
-        		hotBookSch.selectCell(0,0);
+        		//hotBookSch.destroy();
+        		//hotBookSch = new Handsontable(divBookSch,datahot);
+        		hotBookSch.loadData(res);
+            	hotBookSch.selectCell(0,0);
         	}
         	else
-        		 $('input[name=txtBookTitle]').focus();
+        	{
+        		//hotBookSch.destroy();
+    		    //hotBookSch = new Handsontable(divBookSch,datahot);
+    		     
+    		     //hotBookSch.loadData(res);
+    		     hotBookSch.updateSettings({
+				    data : []
+				});
+    		     $('input[name=inputBookTitle]').focus();
+        		 //alert("없다");
+    		     //$('input[name=txtBarcode]').focus();
+        		// $('input[name=txtBarcode]').mousedown();
+        		
+        		 //$('input[name=txtBookTitle]').val('');
+        		
+        		 
+        	}
         }
     });
 }
@@ -345,7 +374,7 @@ function addBascket(arrBookItem)
 	    });
 }
 </script>
- 
+ </th:block>
    
 </body>
 

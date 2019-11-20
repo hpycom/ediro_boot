@@ -19,7 +19,7 @@
         <h2>CUSTOM LOGIN PAGE</h2>
 
         <div th:if="${param.error != null}">
-            <h2>Invalid Username or password</h2>
+            <h2>가입하지 않은 아이디이거나, 잘못된 비밀번호입니다</h2>
             <h2 th:value="${param.error}"></h2>
         </div>
 
@@ -40,7 +40,7 @@
             </p>
 			<br>
             <p>
-                <label for="text">Remember-Me</label> <input type="checkbox"
+                <label for="text">로그인 상태 유지</label> <input type="checkbox"
                                                              id="remember-me" name="remember-me" />
             </p>
 

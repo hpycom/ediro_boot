@@ -1,12 +1,15 @@
 package com.ediro.security;
 
 import lombok.Getter;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import com.ediro.domain.Member;
 import com.ediro.domain.MemberRole;
 import com.ediro.domain.Roles;
+import com.ediro.persistence.MemberRepository;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -21,6 +24,7 @@ import java.util.List;
 public class EdiroSecurityUser extends User {
     private static final String ROLE_PREFIX="ROLE_";
     private Member member;
+
 
     
     public EdiroSecurityUser(Member member) {

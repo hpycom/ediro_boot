@@ -27,7 +27,7 @@ public class MemberRole {
 	
     @Id
     @ManyToOne
-    @JoinColumn(name="memberID")
+    @JoinColumn(name="mid")
     private Member member;
     
     @Id

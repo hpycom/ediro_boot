@@ -10,11 +10,13 @@ import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
 import com.ediro.domain.Basket;
-import com.ediro.domain.Book;
-import com.ediro.domain.Member;
+
 import com.ediro.domain.QBasket;
 import com.ediro.domain.QBook;
 import com.ediro.security.EdiroSecurityUser;
+import com.ediro.vo.CusBasketVO;
+
+import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.JPQLQuery;
 @Repository
 public class CustomBascketRepositoryImpl  extends QuerydslRepositorySupport implements CustomBascketRepository {
@@ -24,24 +26,22 @@ public class CustomBascketRepositoryImpl  extends QuerydslRepositorySupport impl
 	}
 	
 	@Override
-	public List<Basket> search(Member member,@AuthenticationPrincipal EdiroSecurityUser user) {
+	public List<CusBasketVO> search(@AuthenticationPrincipal EdiroSecurityUser user) {
 		
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		    String userid = user.getMember().getMemberID();
+		    //String userid = user.getMember().getMemberID();
 		    
-		    QBasket bascket = QBasket.basket;
-			 
-		   JPQLQuery<Basket> query = from(bascket);
-		  
-		   if(StringUtils.hasText(userid))
-		   {
-			   query.where(bascket.member.memberID.eq(userid));
-		   }
-		   
+		    QBasket basket = QBasket.basket;
+			QBook qbook = QBook.book;
 			
-		   List<Basket> result = query.fetch();
-		   
-		   return result;
+			JPQLQuery<CusBasketVO> query = from(basket)
+		    		.innerJoin(basket.book, qbook)
+		    		.where(basket.member.eq(user.getMember()))
+		    		.select(Projections.bean(CusBasketVO.class,qbook.bookCode,
+	    					qbook.bookTitle,qbook.author,qbook.publisher,qbook.pubDate,qbook.price,qbook.barcode, basket.basket_id,basket.orderQty,basket.regdate));
+		    		
+		   return query.fetch();
+		  
 	}
 
+	
 }

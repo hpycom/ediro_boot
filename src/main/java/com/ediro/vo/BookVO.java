@@ -7,6 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class BookVO {
+	private int chk;
 	private String bookTitle;
 	private String barcode;
 	private String author;

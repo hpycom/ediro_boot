@@ -51,7 +51,7 @@ public class Book {
     private int chk;
     
     @ManyToOne
-    @JoinColumn(name = "memberid")
+    @JoinColumn(name = "mid")
     @JsonIgnore
     private Member member;
 	

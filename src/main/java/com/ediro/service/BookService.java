@@ -36,14 +36,14 @@ public class BookService {
 	
 	public void save(Book book,Principal principal)
 	{
-		Optional<Member> member = memberRepository.findById(principal.getName());
+		Optional<Member> member = memberRepository.findByMemberID(principal.getName());
 		book.setMember(member.get());
 		bookRepository.save(book);
 	}
 	
 	public void save(BooksVO books,Principal principal)
 	{
-		Optional<Member> member = memberRepository.findById(principal.getName());
+		Optional<Member> member = memberRepository.findByMemberID(principal.getName());
 		//List<Book> lstBooks = books.getData();
 		
 		for(Book book :books.getData())
