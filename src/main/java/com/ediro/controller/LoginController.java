@@ -30,14 +30,15 @@ public class LoginController {
       
 					authorities.forEach(authority -> {
 								
-							  if(authority.getAuthority().equals("ROLE_BOOKSTORE")) {
+							 if(authority.getAuthority().equals("ROLE_BOOKSTORE")) {
 									try {
 												redirectStrategy.sendRedirect(arg0,arg1,"/bookStore/main");
 										  } catch (Exception e) {
 												// TODO Auto-generated catch block
 												e.printStackTrace();
 											}
-								} else if(authority.getAuthority().equals("ROLE_PUBLISHER")) {
+								} else
+						if(authority.getAuthority().equals("ROLE_PUBLISHER")) {
 										try {
 													redirectStrategy.sendRedirect(arg0,arg1, "/publisher/main");
 											  } catch (Exception e) {

@@ -16,6 +16,10 @@ public class BookStoreController {
    public void joinMember() {
 	   
    }
+   @GetMapping("/index")
+   public void index() {
+	   
+   }
   
 }
 

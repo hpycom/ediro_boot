@@ -15,6 +15,7 @@ import org.springframework.security.web.RedirectStrategy;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
  * @author hpycom
@@ -36,14 +37,17 @@ public class IndexController {
        
 					authorities.forEach(authority -> {
 								
-							  if(authority.getAuthority().equals("ROLE_BOOKSTORE")) {
-									try {
+							 if(authority.getAuthority().equals("ROLE_BOOKSTORE")) {
+								/*	try {
 												redirectStrategy.sendRedirect(arg0,arg1,"/bookStore/main");
 										  } catch (Exception e) {
 												// TODO Auto-generated catch block
 												e.printStackTrace();
-											}
-								} else if(authority.getAuthority().equals("ROLE_PUBLISHER")) {
+											}*/
+								
+								} else 
+									
+									if(authority.getAuthority().equals("ROLE_PUBLISHER")) {
 										try {
 													redirectStrategy.sendRedirect(arg0,arg1, "/publisher/main");
 											  } catch (Exception e) {
@@ -59,5 +63,9 @@ public class IndexController {
 		   return "index";
     }
 
+    @RequestMapping(value ="/index",method=RequestMethod.POST)
+    public String index() {
+    	return "index";
+    }
  
 }
