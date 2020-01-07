@@ -49,10 +49,9 @@ public class Book {
     private int dcPercent;// 할인율
     @Transient
     private int chk;
-    
+	@JsonIgnore
     @ManyToOne
     @JoinColumn(name = "mid")
-    @JsonIgnore
     private Member member;
 	
     
@@ -62,13 +61,7 @@ public class Book {
     @UpdateTimestamp
 	private LocalDateTime updatedate;
 	
-    public void setMember(Member member)
-    {
-    	this.member = member;
-    	/*if(! member.getBooks().contains(this)) {
-    		member.getBooks().add(this);
-    	}*/
-    }
+   
    
 }
 

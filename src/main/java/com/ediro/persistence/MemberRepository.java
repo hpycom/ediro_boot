@@ -16,4 +16,5 @@ import com.ediro.domain.Member;
 @Repository
 public interface MemberRepository extends CrudRepository<Member, String> {
  public Optional<Member> findByMemberID(String memberID);
+ public Member findMemberByMemberID(String name);
 }

@@ -23,15 +23,15 @@ import com.ediro.domain.QBook;
  * @Date 2017-12-24
  * @GitHub : https://github.com/
  */
-public interface BookRepository extends CrudRepository<Book, String>,QuerydslPredicateExecutor<Book>{
+public interface BookRepository extends CrudRepository<Book, String>,QuerydslPredicateExecutor<Book>,CustomBookRepository{
 
 	public default Predicate makePredicate(Book bookVO) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 	    String name = auth.getName(); 
-		
+	
 		BooleanBuilder builder = new BooleanBuilder();
 		QBook book = QBook.book;
-		builder.and(book.member.memberID.eq(name));
+		//builder.and(book.member.memberID.eq(name));
 		
 		if(bookVO.getBookTitle() != null && !bookVO.getBookTitle().isEmpty())
 			builder.and(book.bookTitle.contains(bookVO.getBookTitle()));

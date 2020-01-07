@@ -36,8 +36,16 @@ public class CustomBascketRepositoryImpl  extends QuerydslRepositorySupport impl
 			JPQLQuery<CusBasketVO> query = from(basket)
 		    		.innerJoin(basket.book, qbook)
 		    		.where(basket.member.eq(user.getMember()))
-		    		.select(Projections.bean(CusBasketVO.class,qbook.bookCode,
-	    					qbook.bookTitle,qbook.author,qbook.publisher,qbook.pubDate,qbook.price,qbook.barcode, basket.basket_id,basket.orderQty,basket.regdate));
+		    		.select(Projections.bean(CusBasketVO.class,
+		    								 qbook.bookCode,
+	    									 qbook.bookTitle,
+	    									 qbook.author,
+	    									 qbook.publisher,
+	    									 qbook.pubDate,
+	    									 qbook.price,
+	    									 qbook.barcode,
+	    									 basket.orderQty,
+	    									 basket.regdate));
 		    		
 		   return query.fetch();
 		  

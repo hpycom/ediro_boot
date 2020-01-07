@@ -9,7 +9,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class BasketVO {
-	private BigInteger basket_id;
+	private int mid;
 		
 	private BigInteger book_code;
 	

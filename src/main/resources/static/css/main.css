@@ -42,6 +42,14 @@ a:focus {
     margin: 40px 0;
 }
 
+.linkButton { 
+     background: none;
+     border: none;
+     color: #0066ff;
+     text-decoration: underline;
+     cursor: pointer; 
+}
+
 /* ---------------------------------------------------
     SIDEBAR STYLE
 ----------------------------------------------------- */
@@ -136,6 +144,69 @@ a.article:hover {
     background: #6d7fcc !important;
     color: #fff !important;
 }
+/* ---------- book list --------------*/  
+ul.booklist{
+	list-style-type:none;
+	margin:0px;
+	padding:0px;
+}
+
+li.bookitem{
+	padding: 10px 0px 10px 0px;
+    border-bottom:1px solid #d1d1d1;
+}
+
+div.cover {
+	float:left;
+	width:115px;
+	height:154px;
+}
+  img.cover{
+    	width:115px;
+    	height:154px;
+    }
+div.bookinfo{
+
+	width:100%;
+	margin:0 0 0 130px;
+    padding-top:20px;
+	
+}
+
+div.bookdetail::after{
+  content: "";
+  display: block;
+  clear: both;
+}
+
+div.bookdetail a{
+	font-size:16px;
+}
+div.bookdetinfo {
+	padding:5px 0 10px 0;
+	font-size:13px;
+}
+div.navarea{
+	margin-top:5px;
+}
+.button {
+  background-color: #4CAF50; /* Green */
+  border: none;
+  color: white;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+}
+
+.cartButton {
+ padding: 10px 24px;
+}
+
+/* ---------- book list --------------*/
+
 
 /* ---------------------------------------------------
     CONTENT STYLE
@@ -162,4 +233,19 @@ a.article:hover {
     #sidebarCollapse span {
         display: none;
     }
+/* ---------- book list --------------*/   
+    img.cover{
+    	width:100px;
+    	height:148px;
+    }
+  
+    div.cover {
+		width:110px;
+	}
+	
+	div.bookinfo{
+		width:100%;
+		margin-left:112px;
+	}
+ /* ---------- book list --------------*/  
 }

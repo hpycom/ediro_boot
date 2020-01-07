@@ -7,6 +7,8 @@ import java.util.Optional;
 import javax.jdo.annotations.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 
@@ -15,12 +17,15 @@ import com.ediro.domain.Book;
 import com.ediro.domain.Member;
 import com.ediro.persistence.BasketRepository;
 import com.ediro.persistence.BookRepository;
-import com.ediro.persistence.CustomBascketRepository;
+
 import com.ediro.persistence.MemberRepository;
 import com.ediro.security.EdiroSecurityUser;
 import com.ediro.vo.BasketVO;
 import com.ediro.vo.BasketsVO;
+import com.ediro.vo.BookBascketVO;
+import com.ediro.vo.BookVO;
 import com.ediro.vo.CusBasketVO;
+import com.ediro.vo.PageVO;
 
 
 @Service
@@ -46,7 +51,7 @@ public class BookOrderService {
 			basket.setOrderQty(basketvo.getOrderQty());
 		   
 			basketRepo.save(basket);
-		    basketvo.setBasket_id(basket.getBasket_id()); 
+		   /* basketvo.setBasket_id(basket.getBasket_id()); */
 			/*String book_code = bookInBascket.getBook().getBookCode().toString();
 			Basket basket = bascketRepo.findOneByBookCode(book_code);
 			bookInBascket.setBascket_id(bascket.getBascket_id());*/
@@ -55,8 +60,57 @@ public class BookOrderService {
 		return bookBascket;
 	}
 	
-	public List<CusBasketVO> getListBasket(@AuthenticationPrincipal EdiroSecurityUser user)
+	@Transactional
+	public Basket SaveBascket(BasketVO bookBascket,@AuthenticationPrincipal EdiroSecurityUser user)
 	{
+		 Book book=	bookRepo.findBybookCode(bookBascket.getBook_code());
+		 Member mem=	memberRepo.findByMemberID(user.getMember().getMemberID()).orElse(null);
+		
+		 
+		Basket _basket = basketRepo.findOneByBook_bookCodeAndMember_mid(book.getBookCode(),mem.getMid());
+	
+		if(_basket == null)
+		{
+			Basket basket = new Basket();
+		  	
+		    basket.setBook(book);
+			basket.setMember(mem);
+			basket.setOrderQty(bookBascket.getOrderQty());
+		   
+			basketRepo.save(basket);
+			
+			return basket;
+		}
+		else
+		{
+			_basket.setOrderQty(_basket.getOrderQty() + bookBascket.getOrderQty());
+			basketRepo.save(_basket);
+			return _basket;
+		}
+		
+	
+	}
+	
+	public List<CusBasketVO> getListBasket(@AuthenticationPrincipal EdiroSecurityUser user)
+	{		
 		return basketRepo.search(user);
+	}
+	
+	public Page<Book> getBooks(PageVO vo,Book book)
+	{
+		Pageable page = vo.makePageable(0, "bookCode");
+		
+		Page<Book> result = bookRepo.findAll(bookRepo.makePredicate(book), page);
+		
+		return result;
+	}
+	
+	public Page<BookBascketVO> getBooksWithBascketInfo(PageVO vo,BookVO book,Principal principal)
+	{
+		Pageable page = vo.makePageable(0, "bookCode");
+		
+		Page<BookBascketVO> result = bookRepo.getBookListWithCartInfo(book,page,principal);
+		
+		return result;
 	}
 }

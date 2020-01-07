@@ -22,20 +22,21 @@ import java.time.LocalDateTime;
 @Setter
 @Entity
 @Table(name="tbl_basket")
-@EqualsAndHashCode(of="basket_id")
+
 @ToString
+@IdClass(MemberBookBasketId.class)
 public class Basket {
    
-	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private BigInteger basket_id;
 	
-	@OneToOne
+	
+	@Id
+	@ManyToOne
 	@JoinColumn(name="mid")
 	@JsonIgnore
 	private Member member;
 	
-	@OneToOne
+	@Id
+	@ManyToOne
 	@JoinColumn(name="book_code")
 	private Book book;
 	

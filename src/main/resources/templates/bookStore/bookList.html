@@ -1,0 +1,206 @@
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+       layout:decorate="~{/layout/layout_bstore_basic}">
+
+<head>
+    <title>관리용</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <style type="text/css">
+		input.htCheckboxRendererInput{ margin: 3; }
+	</style>
+	<meta name="_csrf" content="${_csrf.token}"/>
+	<meta name="_csrf_header" content="${_csrf.headerName}"/>
+  </head>
+
+<body>
+ <section layout:fragment="content">
+<h2>주문등록</h2>
+<hr />
+<!-- <h3 sec:authentication="name">Spring security username</h3>
+<h3>[[${#authentication.name}]]</h3>-->
+
+<div>
+
+ 			<div>
+			 	<form id='f1' class="form-horizontal" th:action="@{bookList}" method="get" autocomplete="off">
+	   					   <div class="form-group row">
+							    <label for="barcode" class="col-md-1 col-form-label">ISBN(ISSN)</label>
+							    <div class="col-md-2">
+							    	<input type="text" class="form-control" id="barcode" name="barcode" maxlength="13" th:value=${book.barcode}>
+							    </div>
+					   
+							    <label for="bookTitle" class="col-md-1 col-form-label">도서명</label>
+							    <div class="col-md-8">
+							    	<input type="text" class="form-control" id="bookTitle" name="bookTitle" th:value=${book.bookTitle} >
+						 		</div>
+						  </div>
+									  
+							
+						     <div class="form-group row" >
+								  
+								  <label for="publisher" class="col-md-1 col-form-label">출판사</label>
+								   <div class="col-md-5">
+									    <input type="text" class="form-control" id="publisher" name="publisher" th:value=${book.publisher}>
+							       </div>
+							  
+								   <label for="author"class="col-md-1 col-form-label">저자명</label>
+								   	  <div class="col-md-5">
+									    <input type="text" class="form-control" id="author" name="author" th:value=${book.author} >
+						    		</div>
+								  
+							</div>
+								<div class="row justify-content-start">
+									  		 <div class="form-group col-md-8">
+									  		 	<button id="searchBtn">도서 검색</button>
+									   		    <button id="clearSchBtn">초기화</button>
+									   		 </div>
+								</div>
+							
+								<input type='hidden' name='page' th:value=${booklist.currentPageNum}>
+								<input type='hidden' name='size' th:value=${booklist.currentPage.pageSize}>
+							
+				</form>
+		  	 </div>
+		  	 <div>
+			  	 <ul class = "booklist">
+			  	 	<li class="bookitem"  th:each="book:${booklist.listcontent}">
+			  	 	  <div class="bookdetail">
+			  	 	     	<div class="cover"><img class="cover" th:src="@{../img/img_ready.png}" alt="TimeSwitch"/></div>
+			  	 	    	<div class="bookinfo">
+						  	 	<div class="booktitle"><a href="#" ><strong>[[${book.bookTitle}]]</strong></a></div>
+						  	 	<div class="bookdetinfo">
+						  	 		<span>[[${book.publisher}]]</span> |
+							  	 	<span>[[${book.author}]]</span> |
+							  	 	<span>[[${book.pubDate}]]</span> |
+							  	 	<img src="../img/shopping-cart.png"/>&nbsp;<span class='badge badge-primary' th:id="'span_'+${book.bookCode}">[[${book.orderQty}]]</span>
+							  	</div>
+							  	<div class="cart">
+							  	수량:
+							  	<input type="text" th:id="'inputQty_'+${book.bookCode}" style="width:50px" value = "1"/>
+							  	<Button class="button cartButton" th:onclick="'addBascket(\'' + ${book.bookCode} + '\');'">카트에  넣기</Button> 
+							  	</div>
+					  	 	</div>
+				  	 	</div>
+			  	 	<li>
+			  	 </ul>
+		  	 </div>
+		  	 <div class="navarea">
+		  		 <nav>
+					   	
+			
+							<div>
+				
+								<ul class="pagination">
+									<li class="page-item" th:if="${booklist.prevPage}"><a class="page-link"
+										th:href="${booklist.prevPage.pageNumber} + 1">PREV
+											[[${booklist.prevPage.pageNumber} + 1]]</a></li>
+				
+									<li class="page-item"
+										th:classappend="${p.pageNumber == booklist.currentPageNum -1}?active: '' "
+										th:each="p:${booklist.pageList}"><a class="page-link"
+										th:href="${p.pageNumber} +1">[[${p.pageNumber} +1]]</a></li>
+				
+									<li class="page-item" th:if="${booklist.nextPage}"><a class="page-link"
+										th:href="${booklist.nextPage.pageNumber} + 1">NEXT
+											[[${booklist.nextPage.pageNumber} + 1]]</a></li>
+								 </ul>
+							</div>
+								
+					</nav>
+			</div>
+</div>
+</section>			
+<th:block layout:fragment="script">
+	<script th:inline="javascript">
+/*	function addArayBascket(bookCode)
+	{
+	    var arrBookItem = new Array();
+	    var i = $('#inputQty_'+bookCode).val();
+		 var objBookItem = {basket_id:0,book_code:bookCode,orderQty:i};
+		    
+		    arrBookItem.push(objBookItem);
+		   
+		    addBascket(arrBookItem);
+	}
+	
+	function addBascket(arrBookItem)
+	{
+		var token = $("meta[name='_csrf']").attr("content");
+	    var header = $("meta[name='_csrf_header']").attr("content");
+		console.log(arrBookItem);
+	    $.ajax({
+		        url: '/bookOrder/saveBasket',
+		        type: 'post',
+		        contentType : "application/json; charset=UTF-8",
+		        data:JSON.stringify({listBascket: arrBookItem}),
+		        async: true,
+		         beforeSend: function( xhr ) {
+		        	  xhr.setRequestHeader(header, token);
+		        	},
+		        success: function(res) {
+		        	
+		        }
+		    });
+	}
+	*/
+	
+	
+	function addBascket(bookCode)
+	{
+		var token = $("meta[name='_csrf']").attr("content");
+	    var header = $("meta[name='_csrf_header']").attr("content");
+	   
+	    var i = $('#inputQty_'+bookCode).val();
+	    var objBookItem = {mid:0,book_code:bookCode,orderQty:i};
+		
+	    $.ajax({
+		        url: '/bookOrder/saveBasketOne',
+		        type: 'post',
+		        contentType : "application/json; charset=UTF-8",
+		        data:JSON.stringify(objBookItem),
+		        async: true,
+		         beforeSend: function( xhr ) {
+		        	  xhr.setRequestHeader(header, token);
+		        	},
+		        success: function(res) {
+		        	var retval = eval(res);
+		        	var oqty = retval.orderQty;
+		        	 $('#span_'+bookCode).text(oqty);
+		        	alert("카트에 저장되었습니다");
+		        }
+		    });
+	}
+	
+	var formObj = $("#f1");
+	
+	$(".pagination a").click(function(e) {
+	
+		e.preventDefault();
+	
+		formObj.find('[name="page"]').val($(this).attr('href'));
+	
+		formObj.submit();
+	});
+	
+	$("#searchBtn").click(function(e){
+		
+		formObj.find("[name='page']").val("1");
+		formObj.submit();
+	});
+	
+	$("#clearSchBtn").click(function(e){
+		
+		formObj.find("[name='page']").val("1");
+		formObj.find("[name='barcode']").val("");
+		formObj.find("[name='bookTitle']").val("");
+		formObj.find("[name='author']").val("");
+		formObj.find("[name='publisher']").val("");
+		formObj.submit();
+	});
+
+	</script>
+</th:block>
+</body>
+
+</html>
