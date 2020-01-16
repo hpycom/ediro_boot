@@ -67,5 +67,10 @@ public class IndexController {
     public String index() {
     	return "index";
     }
+    
+    @GetMapping("/joinMember")
+    public void joinMember() {
+ 	   
+    }
  
 }

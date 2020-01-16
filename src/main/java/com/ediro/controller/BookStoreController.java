@@ -29,10 +29,7 @@ public class BookStoreController {
    public void main() {
 	   
    }
-   @GetMapping("/joinMember")
-   public void joinMember() {
-	   
-   }
+  
    @GetMapping("/index")
    public void index() {
 	   
