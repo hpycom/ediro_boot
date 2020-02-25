@@ -1,5 +1,7 @@
 <html xmlns:th="http://www.thymeleaf.org"
 	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+       layout:decorate="~{/layout/layout_index_basic}"
 	>
 <head>
 <title>EDIRO</title>
@@ -11,17 +13,18 @@
 
 </head>
 <body class="bg-light">
-
+<section layout:fragment="content">
 	<div class="container">
 
 		<h4 class="mb-4">회원가입</h4>
-		<form id="subform" class="needs-validation"
-			action="/order/member/joinMember" method="post" novalidate>
+	 	<form id="subform" class="needs-validation"
+			th:action="@{/joinMember_save}" th:object="${member}" method="post" novalidate autocomplete="off">
 			<div class="row">
 
 				<div class="col-md-8 mb-1 ">
 					<label for="companyName">회사명(상호)</label> <input type="text"
-						class="form-control" name="companyName" id="companyName" required />
+						class="form-control" name="companyName" id="companyName" 
+																	th:field="*{companyName}" required />
 					<div class="invalid-feedback">회사명(상호)를 입력해 주세요</div>
 				</div>
 			</div>
@@ -31,7 +34,7 @@
 					<label for="memberID">아이디</label>
 
 					<div class="input-group">
-						<input type="text" class="form-control " name="memberID"
+						<input type="text" class="form-control " name="memberID" th:field="*{memberID}"
 							id="memberID" pattern=".{6,}" required />
 
 						<div class="input-group-append">
@@ -54,7 +57,7 @@
 				<div class="col-md-3 mb-1 ">
 
 					<label for="memberID">비밀번호</label> <input type="password"
-						class="form-control" name="memberPwd" id="memberPwd"
+						class="form-control" name="memberPwd" id="memberPwd" th:field="*{memberPwd}"
 						pattern=".{4,}" required />
 					<div class="invalid-feedback">비밀번호를 4자 이상 입력해 주세요</div>
 				</div>
@@ -77,7 +80,7 @@
 			<div class="row">
 				<div class="col-md-4 mb-1 ">
 					<label for="bizRegNo">사업자번호</label> <input type="text"
-						class="form-control" name="bizRegNo" id="bizRegNo"
+						class="form-control" name="bizRegNo" id="bizRegNo" th:field="*{bizRegNo}"
 						pattern="(\d{3})-(\d{2})-(\d{5})$" required />
 					<div class="invalid-feedback">
 						바른 사업자번호를 입력해 주세요.<br> 예)123-45-67890
@@ -88,7 +91,7 @@
 			<div class="row">
 				<div class="col-md-3 mb-1 ">
 					<label for="bossName">대표자명</label> <input type="text"
-						class="form-control" name="bossName" id="bossName" required />
+						class="form-control" name="bossName" id="bossName" th:field="*{bossName}" required />
 					<div class="invalid-feedback">대표자명을 입력해 주세요</div>
 				</div>
 			</div>
@@ -97,6 +100,7 @@
 					<label for="email">이메일</label> <input type="email"
 						class="form-control" name="email" id="email"
 						pattern="[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$"
+						th:field="*{email}";
 						required />
 					<div class="invalid-feedback">이메일명을 바르게 입력해 주세요</div>
 					<p class="help-block">사용하시는 이메일을 입력해 주세요</p>
@@ -106,17 +110,18 @@
 			<div class="row mb-4">
 				<div class="col-md-4 ">
 					<label for="phone">전화번호</label> <input type="tel" name="phone"
-						class="form-control"
+						class="form-control telephone"
 						pattern="(0(2|3[1-3]|4[1-4]|5[1-5]|6[1-4]|70))-(\d{3,4})-(\d{4})$"
+						th:field="*{phone}"
 						required="required">
 					<div class="invalid-feedback">
 						지역번호와 함께 바른 전화번호를 입력해 주세요.<br> 예)031-718-2222,070-1212-2323
 					</div>
 				</div>
 				<div class="col-md-4 ">
-					<label for="phone_2">전화번호(핸드폰)</label> <input type="tel"
-						name="phone_2" class="form-control"
-						pattern="(0(2|3[1-3]|4[1-4]|5[1-5]|6[1-4]|70))-(\d{3,4})-(\d{4})$">
+					<label for="phone_2">전화번호(핸드폰)</label> <input type="tel" 
+						name="phone_2" class="form-control telephone" th:field="*{phone_2}"
+						pattern="(01[016789])-(\d{3,4})-(\d{4})$">
 					<div class="invalid-feedback">
 						지역번호와 함께 바른 전화번호를 입력해 주세요.<br> 예)031-718-2222,070-1212-2323
 					</div>
@@ -125,8 +130,8 @@
 
 			<div class="row mb-4">
 				<div class="col-md-4 ">
-					<label for="fax">팩스번호</label> <input type="tel" name="fax"
-						class="form-control"
+					<label for="fax">팩스번호</label> <input type="tel" name="fax" th:field="*{fax}"
+						class="form-control telephone"
 						pattern="(0(2|3[1-3]|4[1-4]|5[1-5]|6[1-4]|70))-(\d{3,4})-(\d{4})$">
 					<div class="invalid-feedback">
 						지역번호와 함께 바른 팩스번호를 입력해 주세요.<br> 예)031-718-2222,070-1212-2323
@@ -140,7 +145,7 @@
 
 			<div class="row mb-4">
 				<div class="col-md-4 input-group">
-					<input type="text" name="postno" id="postno" class="form-control"
+					<input type="text" name="postno" id="postno" class="form-control" th:field="*{postno}"
 						placeholder="우편번호" required>
 					<div class="input-group-append">
 						<input class="btn btn-outline-dark" type="button" value="우편번호찾기"
@@ -163,12 +168,12 @@
 			<div class="row mb-4 form-group">
 				<div class="col-md-8 ">
 					<input type="text" name="address" id="address" class="form-control"
-						placeholder="주소" readonly="readonly" required>
+						placeholder="주소" readonly="readonly" required th:field="*{address}">
 					<div class="invalid-feedback">주소를 입력해 주세요.</div>
 				</div>
 				<div class="col-md-8 ">
 					<label></label> <input type="text" name="address_detail"
-						id="address_detail" class="form-control" placeholder="상세주소"
+						id="address_detail" class="form-control" placeholder="상세주소" th:field="*{address_detail}"
 						required>
 					<div class="invalid-feedback">상세주소를 입력해 주세요.</div>
 				</div>
@@ -181,20 +186,19 @@
 				<div class="col-md-2 ml-1">
 					<button class="btn btn-primary btn-lg btn-block" type="submit"
 						id="btnSubmit">저장</button>
+						<br/>
 				</div>
 			</div>
 		</form>
 	</div>
+		
 	<!-- container -->
+</section>
 
-
-
-	<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-	<script
-		src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
-	<script src="/resources/bootStrap/js/bootstrap.min.js"></script>
-	<script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
-	<script>
+<th:block layout:fragment="script">
+  <script th:src="@{http://dmaps.daum.net/map_js_init/postcode.v2.js}"></script>
+	 
+<script  th:inline="javascript">
 
 
 	
@@ -206,6 +210,10 @@ $("#memberID").change(function() {
 	$("#p_dupChkID span").text('');
 });
 
+$(".form-control.telephone").on("keyup",
+		 function() { $(this).val( $(this).val().replace(/[^0-9]/g, "").replace(/(^02|^0505|^1[0-9]{3}|^0[0-9]{2})([0-9]+)?([0-9]{4})/,"$1-$2-$3").replace("--", "-") ); });
+$("#bizRegNo").on("keyup",
+		 function() { $(this).val( $(this).val().replace(/[^0-9]/g, "").replace(/([0-9]{3})([0-9]{2})([0-9]{5})/,"$1-$2-$3").replace("--", "-") ); });
 
 function passcheck() {
 	var pass1 = $('#memberPwd').val();
@@ -258,18 +266,21 @@ $("#btnDupIDcheck").on("click",function(){
 	
 	var idName = $("#memberID").val();
 	if(idName.length < 6)
-		return;
+		{ 
+			alert('아이디는 여섯글자 이상입니다.');
+			return;
+		}
 	
 	$.ajax({
-		type:'POST',
-		url:'/order/member_rest/isMember/'+idName,
+		type:'GET',
+		url:'/isMember/'+idName,
 		headers:{
 			"Content-Type":"application/json",
-			"X-HTTP-Method-Override":"POST"
+			"X-HTTP-Method-Override":"GET"
 		},
 		dataType:'text',
 		success: function(result){
-			if (result == 0)
+			if (result == "0")
 				{
 				$("#p_dupChkID  span").css('color','blue');
 				
@@ -288,7 +299,10 @@ $("#btnDupIDcheck").on("click",function(){
 					$("#idDupCheck").val('');
 					
 				}
-		}
+		},
+		error:function(request,status,error){
+	        alert("서버 접속 오류입니다.!"); // 실패 시 처리
+	       }
 	});
 });
 
@@ -349,5 +363,6 @@ function sample3_execDaumPostcode() {
 }
 
 	</script>
+	</th:block>
 </body>
 </html>

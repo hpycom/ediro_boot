@@ -1,0 +1,125 @@
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+       layout:decorate="~{/layout/layout_publisher_basic}">
+
+<head>
+    <title>관리용</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+     </head>
+
+<body>
+ <section layout:fragment="content">
+	
+<div>
+	<ul class="nav nav-tabs" id="myTab" role="tablist">
+	  <li class="nav-item">
+	    <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Home</a>
+	  </li>
+	  <li class="nav-item">
+	    <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Profile</a>
+	  </li>
+	</ul>
+	
+	<div class="tab-content" id="myTabContent">
+	  <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+	 
+	  </div>
+		
+	
+	  
+	  <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+		  			<form th:action="@{insertBook}"  method="post" autocomplete="off" enctype="multipart/form-data">
+						<div class="row justify-content-start">
+						 <div class="form-group col-md-4">
+						    <div class="cover"><img class="cover" th:src="@{../img/img_ready.png}" alt="TimeSwitch"/></div>
+						    </div>
+						</div>
+						    
+						<div class="row justify-content-start">
+						   <div class="form-group col-md-2">
+						    <label for="barcode">ISBN(ISSN)</label>
+						    <input type="text" class="form-control form-control-sm" id="barcode" name="barcode"  maxlength="13" required>
+						  </div>
+						   <div class="form-group col-md-6">
+						    <label for="bookTitle">도서명</label>
+						    <input type="text" class="form-control form-control-sm" id="bookTitle" name="bookTitle"  required>
+						  </div>
+						   
+						</div>
+						
+						<div class="row justify-content-start">
+						  <div class="form-group col-md-6">
+						    <label for="bookSubTitle">부제(시리즈명)</label>
+						    <input type="text" class="form-control form-control-sm" id="bookSubTitle" name="bookSubTitle" >
+						  </div>
+						</div>
+						<div class="row justify-content-start">
+						   <div class="form-group  col-md-2">
+						    <label for="bookVerInfo">판형</label>
+						    <input type="text" class="form-control form-control-sm" id="bookVerInfo" name="bookVerInfo"  >
+						  </div>
+					    </div>
+					    <div class="row justify-content-start">
+						    <div class="form-group  col-md-4">
+						    <label for="publisher">출판사</label>
+						    <input type="text" class="form-control form-control-sm" id="publisher" name="publisher"  required>
+						  </div>
+						</div>
+						<div class="row justify-content-start">
+						   <div class="form-group  col-md-4">
+						    <label for="author">저자</label>
+						    <input type="text" class="form-control form-control-sm" id="author" name="author"  required>
+						  </div>
+						</div>
+						
+						<div class="row justify-content-start">
+						   <div class="form-group  col-md-2">
+						    <label for="price">정가</label>
+						    <input type="number" class="form-control form-control-sm" id="price" name="price"  required>
+						  </div>
+						  
+						  <div class="form-group col-md-2">
+						    <label for="dcPercent">할인율</label>
+						    <input type="number" class="form-control form-control-sm" id="dcPercent" name="dcPercent"  required>
+						  </div>
+					    </div>
+					   <div class="row justify-content-start">
+						   <div class="form-group col-md-4">
+						    <label for="pubDate">발행일</label>
+						    <input type="date" class="form-control form-control-sm" id="pubDate" name="pubDate"  required>
+						  </div>
+						</div>
+						
+						
+						  <button type="submit" class="btn btn-default"> 저장</button>
+						  <button type="reset" class="btn btn-primary"> 리셋</button>
+					
+					</form>
+	
+	  
+	  </div>
+	</div>
+	
+	
+		
+</div>	
+		
+	      
+</section>
+
+
+<th:block layout:fragment="script">
+<script th:inline="javascript">
+
+
+</script>
+</th:block>
+
+
+
+ 
+   
+</body>
+
+</html>

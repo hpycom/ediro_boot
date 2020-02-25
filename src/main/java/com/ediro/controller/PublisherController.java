@@ -1,42 +1,50 @@
 package com.ediro.controller;
 
+import java.io.File;
 import java.security.Principal;
-import java.util.List;
 
+
+
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.annotation.Secured;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
+
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.multipart.MultipartFile;
+
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.ediro.domain.Book;
-import com.ediro.persistence.BookRepository;
+
 import com.ediro.service.BookService;
 import com.ediro.vo.BooksVO;
 import com.ediro.vo.PageMaker;
 import com.ediro.vo.PageVO;
 
+
 import lombok.extern.java.Log;
-import java.security.Principal;
+
 
 @Controller
 @RequestMapping("/publisher")
 @Log
 public class PublisherController {
-   @Autowired
+   
+   @Value("${bookimage.uploaded}")
+   private  String UPLOADED_FOLDER;
+	
+	@Autowired
    BookService bookSrv;
    
    @GetMapping("/main")
@@ -56,11 +64,25 @@ public class PublisherController {
 	   log.info(book.toString());
    }
   
-   @PostMapping("/insertBook")
-   public String insertBook(@ModelAttribute("book")Book book,RedirectAttributes rttr,Principal principal) {
-	   log.info("" + book);
+   @RequestMapping(value = "/insertBook", method = RequestMethod.POST)
+   public String insertBook(@RequestParam("imageFile") MultipartFile imageFile, @ModelAttribute("book")Book book,Principal principal) throws Exception{
+	
 	   bookSrv.save(book,principal);
+	   if(!imageFile.isEmpty()){
+		      String sourceFileName = imageFile.getOriginalFilename(); 
+		        String sourceFileNameExtension = FilenameUtils.getExtension(sourceFileName).toLowerCase(); 
+		        File destinationFile = new File(UPLOADED_FOLDER + book.getBarcode()+"."+sourceFileNameExtension); 
+		           log.info("" + destinationFile);
+		    
+		           destinationFile.getParentFile().mkdirs(); 
+			        imageFile.transferTo(destinationFile);
+		       
+			       
+
+	   }
+
 	   return "redirect:/publisher/addBook";
+	 
    }
    
 
@@ -73,5 +95,8 @@ public class PublisherController {
 		   return "asdf";
 		 
    }
-	   
+   @GetMapping("/bookMaster")
+   public void bookMaster() {
+	 
+   }   
 }
