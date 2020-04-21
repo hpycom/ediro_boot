@@ -27,8 +27,7 @@ public interface BookRepository extends CrudRepository<Book, String>,QuerydslPre
 
 	public default Predicate makePredicate(Book bookVO) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-	    String name = auth.getName(); 
-	
+	  
 		BooleanBuilder builder = new BooleanBuilder();
 		QBook book = QBook.book;
 		//builder.and(book.member.memberID.eq(name));

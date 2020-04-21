@@ -47,10 +47,13 @@ public class Book {
     private int price;
     private String pubDate;
     private int dcPercent;// 할인율
+    private String delYN = "N";
+    
     @Transient
     private int chk;
-	@JsonIgnore
-    @ManyToOne
+	
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "mid")
     private Member member;
 	

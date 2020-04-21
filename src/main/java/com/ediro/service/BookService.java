@@ -1,5 +1,6 @@
 package com.ediro.service;
 
+import java.math.BigInteger;
 import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
@@ -60,5 +61,11 @@ public class BookService {
 		Page<Book> result = bookRepository.findAll(bookRepository.makePredicate(book), page);
 		
 		return result;
+	}
+	
+	public Book getBookByBookCode(BigInteger book_code )
+	{
+		  Book book  = bookRepository.findBybookCode(book_code);
+		  return book;
 	}
 }

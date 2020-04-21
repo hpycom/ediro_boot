@@ -65,7 +65,8 @@ public class Member {
 	@UpdateTimestamp
 	private LocalDateTime updatedate;
 	
-	@OneToMany(mappedBy="member",fetch = FetchType.EAGER)
+	@OneToMany(mappedBy="member",fetch = FetchType.LAZY)
+	@JsonIgnore
 	private List<MemberRole> memberRoles = new ArrayList<>();
 	
 	public void addRole(MemberRole memberRole)

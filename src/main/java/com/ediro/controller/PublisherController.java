@@ -1,15 +1,23 @@
 package com.ediro.controller;
 
 import java.io.File;
+import java.math.BigInteger;
+
+
 import java.security.Principal;
+import java.util.List;
 
-
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
-
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 
@@ -26,9 +34,12 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.ediro.domain.Book;
-
+import com.ediro.domain.MemberBookDiscount;
+import com.ediro.security.EdiroSecurityUser;
 import com.ediro.service.BookService;
+import com.ediro.service.MemberBookDiscountService;
 import com.ediro.vo.BooksVO;
+import com.ediro.vo.MemberBookDiscountVO;
 import com.ediro.vo.PageMaker;
 import com.ediro.vo.PageVO;
 
@@ -46,6 +57,9 @@ public class PublisherController {
 	
 	@Autowired
    BookService bookSrv;
+	
+	@Autowired
+	MemberBookDiscountService mBookDisSrv;
    
    @GetMapping("/main")
    public void main(Principal principal,Model model,PageVO pageVO,@ModelAttribute("book")Book book) {
@@ -63,15 +77,33 @@ public class PublisherController {
    public void addBook(@ModelAttribute("book")Book book) {
 	   log.info(book.toString());
    }
+
+    @RequestMapping(value = "/getBook", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+	@ResponseBody
+	public ResponseEntity<Book> getBookBybookCode(@RequestParam("book_code") String book_code)
+	{
+	    BigInteger _book_code = new BigInteger(book_code);
+        Book book = bookSrv.getBookByBookCode(_book_code);
+        return new ResponseEntity<>(book,HttpStatus.OK);
+	}
   
+   @RequestMapping(value = "/getMemBookDiscnt", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
+  	@ResponseBody
+  	public ResponseEntity<List<MemberBookDiscountVO>> getMemBookDiscnt(@RequestParam("book_code") String book_code)
+  	{
+  	    BigInteger _book_code = new BigInteger(book_code);
+         List<MemberBookDiscountVO> listMemberBookDiscnt =  mBookDisSrv.getMembookDiscounts(_book_code);
+          return new ResponseEntity<>(listMemberBookDiscnt,HttpStatus.OK);
+  	}
+   
    @RequestMapping(value = "/insertBook", method = RequestMethod.POST)
    public String insertBook(@RequestParam("imageFile") MultipartFile imageFile, @ModelAttribute("book")Book book,Principal principal) throws Exception{
 	
 	   bookSrv.save(book,principal);
 	   if(!imageFile.isEmpty()){
-		      String sourceFileName = imageFile.getOriginalFilename(); 
-		        String sourceFileNameExtension = FilenameUtils.getExtension(sourceFileName).toLowerCase(); 
-		        File destinationFile = new File(UPLOADED_FOLDER + book.getBarcode()+"."+sourceFileNameExtension); 
+		     // String sourceFileName = imageFile.getOriginalFilename(); 
+		        //String sourceFileNameExtension = FilenameUtils.getExtension(sourceFileName).toLowerCase(); 
+		        File destinationFile = new File(UPLOADED_FOLDER + book.getBarcode()+".jpg"); 
 		           log.info("" + destinationFile);
 		    
 		           destinationFile.getParentFile().mkdirs(); 
@@ -85,9 +117,31 @@ public class PublisherController {
 	 
    }
    
+   @RequestMapping(value = "/updateBookCover", method = RequestMethod.POST)
+   public  ResponseEntity<?> updateBookCover(@RequestParam("imageFile") MultipartFile imageFile, @RequestParam("barcode") String barcode,Principal principal,HttpServletResponse response) throws Exception{
+	try
+	{
+	  if(!imageFile.isEmpty()){
+		     // String sourceFileName = imageFile.getOriginalFilename(); 
+		        //String sourceFileNameExtension = FilenameUtils.getExtension(sourceFileName).toLowerCase(); 
+		        File destinationFile = new File(UPLOADED_FOLDER + barcode+".jpg"); 
+		           log.info("" + destinationFile);
+		    
+		           destinationFile.getParentFile().mkdirs(); 
+			        imageFile.transferTo(destinationFile);
+		       
+			       
+
+	   }
+	} catch (Exception ex){
+	   	 response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+	}
+	  return new ResponseEntity("Successfully uploaded - " + imageFile.getOriginalFilename(), new HttpHeaders(), HttpStatus.OK);
+	
+   }
 
  // @PostMapping("/updBooks")
-   
+   @Secured(value= {"ROLE_PUBLISHER","ROLE_BOOKSTORE"})
    @RequestMapping(value="updBooks",  method= RequestMethod.POST,consumes="application/json")
    public @ResponseBody  String updBooks( @RequestBody  BooksVO name,RedirectAttributes rttr,Principal principal) {
 		   log.info("" + name);
@@ -96,7 +150,7 @@ public class PublisherController {
 		 
    }
    @GetMapping("/bookMaster")
-   public void bookMaster() {
-	 
+   public void bookMaster(Model model) {
+	   model.addAttribute("UPLOADED_FOLDER",UPLOADED_FOLDER);
    }   
 }

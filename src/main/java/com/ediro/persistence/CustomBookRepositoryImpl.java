@@ -2,14 +2,14 @@ package com.ediro.persistence;
 
 import java.security.Principal;
 import java.util.List;
-import java.util.Optional;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
+
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
@@ -17,11 +17,10 @@ import com.ediro.domain.Book;
 import com.ediro.domain.Member;
 import com.ediro.domain.QBasket;
 import com.ediro.domain.QBook;
-import com.ediro.security.EdiroSecurityUser;
+
 import com.ediro.vo.BookBascketVO;
 import com.ediro.vo.BookVO;
-import com.ediro.vo.CusBasketVO;
-import com.querydsl.core.types.Predicate;
+
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.JPQLQuery;
 
@@ -46,7 +45,18 @@ public class CustomBookRepositoryImpl extends QuerydslRepositorySupport implemen
 	   {
 		   query.where(book.bookTitle.contains(vbook.getBookTitle()));
 	   }
-		
+	   
+	   if(StringUtils.hasText(vbook.getBarcode()))
+	   {
+		   query.where(book.barcode.contains(vbook.getBarcode()));
+	   }
+
+	   if(StringUtils.hasText(vbook.getStartPubdate()) && StringUtils.hasText(vbook.getEndPubdate()))
+	   {
+		   query.where(book.pubDate.goe(vbook.getStartPubdate()));
+		   query.where(book.pubDate.loe(vbook.getEndPubdate()));
+		   
+	   }
 	   List<Book> result = query.fetch();
 	   
 	   return result;

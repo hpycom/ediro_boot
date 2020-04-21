@@ -20,10 +20,10 @@ import lombok.ToString;
 @Getter
 @Setter
 @Entity
-@Table(name="tbl_member_discount")
-@IdClass(MemberDiscountId.class)
+@Table(name="tbl_member_book_discount")
+@IdClass(MemberBookDiscountId.class)
 @ToString
-public class MemberDiscount {
+public class MemberBookDiscount {
 	@Id
 	@ManyToOne
 	@JoinColumn(name="mid")

@@ -13,4 +13,6 @@ public class BookVO {
 	private String author;
 	private String publisher;
 	private String pubDate;
+	private String startPubdate;
+	private String endPubdate;
 }

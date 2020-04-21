@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -44,14 +45,14 @@ public class BookOrderController {
     BasketRepository basRepo;
     
 	@GetMapping("/booklist")
-	public ResponseEntity<List<Book>> getBookList(@AuthenticationPrincipal EdiroSecurityUser user)
+	public ResponseEntity<List<Book>> getBookList()
 	{
 	   List<Book> bookList = bookService.getBooks();
 	   
 	   return new ResponseEntity<>(bookList,HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/schBooks", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+	@RequestMapping(value = "/schBooks", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
 	@ResponseBody
 	public ResponseEntity<List<Book>> getBookList(@ModelAttribute("BookVO") BookVO vbook)
 	{
@@ -64,7 +65,7 @@ public class BookOrderController {
 	
 	@RequestMapping(value = "/saveBasket", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
 	@ResponseBody
-	public ResponseEntity<BasketsVO> saveBascket(@RequestBody BasketsVO vbascket,@AuthenticationPrincipal EdiroSecurityUser user)
+	public ResponseEntity<BasketsVO> saveBascket(@RequestBody BasketsVO vbascket,@AuthenticationPrincipal EdiroSecurityUser user )
 	{
 		log.info(vbascket.getListBascket().get(0).getBook_code().toString());
 		
