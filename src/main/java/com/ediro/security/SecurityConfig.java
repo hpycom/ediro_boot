@@ -35,6 +35,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Autowired
 	ediroUsersService _ediroUsersService;
 	
+	@Autowired
+	SimpleAuthenticationSuccessHandler AuthenSucessHandler;
 	
 	@Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -42,7 +44,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         
         http.authorizeRequests().antMatchers("/guest/**").permitAll();
         http.authorizeRequests().antMatchers("/bookStore/**").hasRole("BOOKSTORE");
-        http.authorizeRequests().antMatchers("/publisher/**").hasRole("PUBLISHER");
+        http.authorizeRequests().antMatchers("/publisher/**").hasRole("PUBLISHER").and().formLogin().successHandler(AuthenSucessHandler);
         http.authorizeRequests().antMatchers("/data/book/**").hasAnyRole("PUBLISHER","BOOKSTORE");
         http.formLogin().loginPage("/login");
         http.exceptionHandling().accessDeniedPage("/accessDenied");
@@ -59,7 +61,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
       //  http.csrf().requireCsrfProtectionMatcher(new AntPathRequestMatcher("**/login")).and().authorizeRequests()
 	//	.antMatchers("/manager/**").hasRole("MANAGER")
 	//	.antMatchers("/admin/**").hasRole("ADMIN")
-	//	.and().formLogin().successHandler(successHandler)
+	//
 	//	.loginPage("/login").and().logout().permitAll();
         
         http.rememberMe().key("ediro").userDetailsService(_ediroUsersService).tokenRepository(getJDBCRepository()).tokenValiditySeconds(60*60*24*14);

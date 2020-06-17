@@ -15,13 +15,17 @@
 
 <body>
  <section layout:fragment="content">
+ <div class="container">
 <h1>/bookStore for bookStore</h1>
 <hr />
 <h3 sec:authentication="name">Spring security username</h3>
 <h3>[[${#authentication.name}]]</h3>
 
 <hr />
-<div id="example"></div>
+
+<div id="example" style="height:500px;"></div>
+
+
 <button onclick="javascript:loadBasket();">basketLoadTest</button>
   <!-- Modal -->
 		   <div class="modal" id="exampleModal" data-backdrop="static" tabindex="-1" role="dialog"   aria-hidden="true">
@@ -57,7 +61,7 @@
 				    </div> 
 				  </div> 
 	       </div>	
-	  
+	</div>  
 </section>
 
 
@@ -75,6 +79,7 @@ var hot = new Handsontable(example, {
 	  rowHeaders: true,
 	  colHeaders: true,
 	  colHeaders: ['선택','bookCode', '도서명', '바코드', '저자','출판사','정가','주문수'],
+	  height:500,
 	  startRows: 1,
 	  startCols: 8,
 	  fillHandle:false,
@@ -113,6 +118,7 @@ var hot = new Handsontable(example, {
     	
     	if(event.keyCode == 13 && fCol==2)
     		{
+    		
     		   hot.deselectCell();
     		   var data = hot.getDataAtCell(fRow,fCol);
     		   $('input[name=inputBookTitle]').val(data);
@@ -189,6 +195,7 @@ var datahot =  {
 		    	
 			    	if(event.keyCode == 13)
 			    		{
+			    		
 			    		    var arrData = hotBookSch.getSourceData();
 			    		    var arrBookItem = new Array();
 			    		    
@@ -230,6 +237,8 @@ var datahot =  {
 			    		    }
 			    		    else
 			    		    {
+			    		    	$('.alert').alert();
+			    		    	
 			    		    	console.log(vRow);
 				    		    var data = hotBookSch.getDataAtRow(vRow);
 			    				
@@ -310,7 +319,7 @@ function loadDataBookSch() {
 	
     $.ajax({
         url: '/bookOrder/schBooks',
-        type: 'post',
+        type: 'GET',
         datatype:'json',
         data:bookVO,
         async: true,

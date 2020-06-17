@@ -7,6 +7,7 @@ import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.JoinColumnOrFormula;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -25,9 +26,11 @@ import java.util.List;
  * @Date 2018-08-21
  * @GitHub : https://github.com/
  */
+
 @Getter
 @Setter
 @Entity
+@DynamicUpdate
 @Table(name="tbl_book")
 @EqualsAndHashCode(of="bookCode")
 @ToString
@@ -63,8 +66,11 @@ public class Book {
 	
     @UpdateTimestamp
 	private LocalDateTime updatedate;
-	
+    
    
+   // @Convert(converter = BookStatusConverter.class)
+    @Enumerated(EnumType.STRING)
+    private BookStatus bookstatus;
    
 }
 

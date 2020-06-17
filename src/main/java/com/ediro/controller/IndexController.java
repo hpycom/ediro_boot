@@ -42,11 +42,12 @@ public class IndexController {
 	@Autowired
 	private MemberRepository memRepo;
 	
+	//private RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
 	
     @GetMapping("/")
     public String index(HttpServletRequest arg0, HttpServletResponse arg1, Authentication authentication) {
         log.info("## request index page");
-      /*  if(authentication != null)
+     /*  if(authentication != null)
         {
         Collection <? extends GrantedAuthority> authorities = authentication.getAuthorities();
        
@@ -54,7 +55,7 @@ public class IndexController {
 								
 							 if(authority.getAuthority().equals("ROLE_BOOKSTORE")) {
 									try {
-												redirectStrategy.sendRedirect(arg0,arg1,"/bookStore/main");
+												redirectStrategy.sendRedirect(arg0,arg1,"/");
 										  } catch (Exception e) {
 												// TODO Auto-generated catch block
 												e.printStackTrace();

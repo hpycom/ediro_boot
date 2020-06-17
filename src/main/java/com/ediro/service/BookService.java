@@ -68,4 +68,12 @@ public class BookService {
 		  Book book  = bookRepository.findBybookCode(book_code);
 		  return book;
 	}
+	
+	public void deleteBook(BigInteger book_code,Principal principal)
+	{
+		  Book book  = bookRepository.findBybookCode(book_code);
+		  book.setDelYN("Y");
+		  bookRepository.save(book);
+	}
+	
 }

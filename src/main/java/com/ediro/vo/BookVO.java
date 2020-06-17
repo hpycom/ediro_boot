@@ -15,4 +15,5 @@ public class BookVO {
 	private String pubDate;
 	private String startPubdate;
 	private String endPubdate;
+	private String bookstatus;
 }

@@ -5,10 +5,14 @@
 
 <head>
     <title>관리용</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
      <style type="text/css">
 		input.htCheckboxRendererInput{ margin: 3; }
 		input.form-control-sm{ font-size:12px;}
+		select.form-control-sm{ font-size:12px;}
+		
 		label.col-form-label-sm{font-size:12px;}
 		.form-group {
    			 margin-bottom: 0.5rem;}
@@ -44,6 +48,15 @@
 				           <div class="form-group col-md-12   col-lg-2 px-0 mx-1">
 					       		<input type="date" autocomplete="off" class="form-control form-control-sm px-lg-0 mx-lg-0" id="txtEndtPubdate" name="txtEndPubdate" placeHolder="출간일" />
 				           </div>
+				            <div class="form-group col-md-12   col-lg-1 px-0 mx-1">
+				           <select class="form-control form-control-sm" id="qryBookStatus" name="qryBookStatus">
+				           							<option value="">전체</option>
+												    <option  th:each="state : ${T(com.ediro.domain.BookStatus).values()}"
+												            th:value="${state}"
+												            th:text="${state.code}">
+												    </option>
+												</select>
+							</div>					
 				             <div class="form-group col-md-12  col-lg-1 px-lg-0 mx-lg-0">
 				           <button id="searchBtn">search</button>
 				           </div>
@@ -87,6 +100,16 @@
 											  <div class="col-lg-3 col-md-12">
 										    		<input type="text" class="form-control form-control-sm" id="bookVerInfo" name="bookVerInfo"  >
 										     </div>
+										     <label for="BookStatus" class="col-lg-auto col-md-12 col-form-label col-form-label-sm px-lg-0 mx-lg-0 ">상태</label>
+											  <div class="col-lg-3 col-md-12">
+										    	<select class="form-control form-control-sm" id="BookStatus" name="BookStatus">
+												    <option  th:each="state : ${T(com.ediro.domain.BookStatus).values()}"
+												            th:value="${state}"
+												            th:text="${state.code}">
+												    </option>
+												</select>
+										     </div>
+										      
 										</div>
 										
 										<div class="form-group row  ">
@@ -143,20 +166,13 @@
 						
 					   
 					   
-						<p>
+						<br/>
 						<div class="row justify-content-center">
 						  
-						
-						 <button type="button" class="btn btn-default"> 저장</button>
-						
-						</div>	
-						<p/>
-						<div class="row justify-content-center">
-						  
-							    <label for="mid" class="col-lg-auto col-md-12 col-form-label col-form-label-sm px-lg-0 mx-lg-0">코드</label>
-							    <div class="col-lg-2 col-md-12  mx-lg-0">
-							    	<input type="text" class="form-control form-control-sm" id="mid"  name="mid"  required>
-							  	</div>
+							   <!--   <label for="mid" class="col-lg-auto col-md-12 col-form-label col-form-label-sm px-lg-0 mx-lg-0">코드</label>
+							    <div class="col-lg-2 col-md-12  mx-lg-0">-->
+							    	<input type="hidden" class="form-control form-control-sm" id="mid"  name="mid"  required>
+							  	<!--  </div> -->
 							    
 							    <label for="company_name" class="col-lg-auto col-md-12 col-form-label col-form-label-sm px-lg-0 mx-lg-0">서점명</label>
 							     <div class="col-lg-5 col-md-12 mx-lg-0">
@@ -167,9 +183,15 @@
 							    <div class="col-lg-2 col-md-12  mx-lg-0">
 							    	<input type="number" class="form-control form-control-sm" id="discount_pct" name="discount_pct"  required>
 							    </div>
+							    
 							    <div class="col-lg-auto	 col-md-12  mx-lg-0 px-lg-0">
 							     	<button type="button" id="btnAddCusDiscPct" class="btn btn-success btn-sm"> 추가</button>
 							     </div>
+							 
+							     <div class="col-lg-auto col-md-12">
+							     	<button type="button" id="btnDelCusDiscPct" class="btn btn-success btn-sm"> 할인율 삭제</button>
+								</div>
+							     
 						</div>
 						
 						<p/>
@@ -178,6 +200,17 @@
 						  	<div id="memBookDisCntlist"></div>
 						  </div>
 						</div>
+						<div class="row justify-content-center">
+							<div class="col-2  ">
+							<button id="save"> 도 서 저 장  </button> 
+							</div>
+							<div class="col-2">
+							<button id="delete"> 도  서 삭   제 </button>
+							</div>
+							
+							
+							
+						</div>
 				</div>
 	    </div>
 	 
@@ -185,7 +218,7 @@
 		<div id="divPopupCus"> </div>
 	</div>
 	
-	
+	<br/>
 </section>
 
   
@@ -195,6 +228,8 @@
 	 
 		<script th:inline="javascript">
 		var cur_book_code;
+		var cur_book_row;
+		var cur_discnt_mid;
 		
 		var valObj ={
 				divId:"divPopupCus",
@@ -257,7 +292,30 @@
 		
 		
 		});
-		   
+		
+		
+		$("#btnDelCusDiscPct").click(function(e){
+		
+			
+			if(cur_discnt_mid == undefined)
+			{
+				alert("삭제할 서점 할인율을 선택해 주세요");
+				return;
+			}
+			
+			if(cur_book_code == undefined)
+			{
+				alert("삭제할 도서를 선택해 주세요");
+				return;
+			}
+			
+			delCusDiscount(cur_book_code,cur_discnt_mid).then(function(response){
+				alert("삭제되었습니다.");
+				getMemBookDisCnt(cur_book_code);
+			});
+		
+		});
+		
 		/*$("input:text").on("keyup", function() {
 		    $(this).val(addCommas($(this).val().replace(/[^0-9]/g,"")));
 		});*/
@@ -276,7 +334,7 @@
 		<!-- 도서 조회 클릭 이벤트 -->
 		$("#searchBtn").click(function(e){
 			
-			loadDataBookSch();
+			loadDataBookSch(0);
 		});	
 		<!-- 도서 조회 클릭 이벤트 -->
 		
@@ -296,6 +354,7 @@
 				  manualColumnResize: true,
 				  outsideClickDeselects:false,
 				  selectionMode: 'single',
+				  columnSorting: true,
 				  afterSelection: function (row, column, row2, column2, preventScrolling, selectionLayerLevel){
 					  var m = this.getDataAtCell(row,0)
 					 // console.log(m);
@@ -305,6 +364,8 @@
 					  getMemBookDisCnt(m);
 					  
 					  preventScrolling.value = true;
+					  
+					  cur_book_row = hot.toPhysicalRow(row);
 					  },
 				  columns: [
 					 			{data: 'bookCode',readOnly:true},
@@ -331,37 +392,55 @@
 				  width:"100%",
 				  rowHeaders: true,
 				  colHeaders: true,
-				  colHeaders: ['코드','고객명','대표자명','주소' ,'할인율'],
+				  colHeaders: ['코드','*','고객명','대표자명','주소' ,'할인율'],
 				  startRows: 0,
 				  startCols: 4,
 				  fillHandle:false,
+				  columnSorting: true,
 				  currentRowClassName: 'currentRow',
 				  manualColumnResize: true,
 				  outsideClickDeselects:false,
 				  selectionMode: 'single',
 				  columns: [
 					 			{data: 'mid',readOnly:true},
-					 			 {data: 'companyName',readOnly:true},
+					 			{data: 'alt',readOnly:true},
+					 			{data: 'companyName',readOnly:true},
 							    {data: 'bossName',readOnly:true},
 							    {data: 'address',readOnly:true},
 							    {data: 'discountPct'}
 							    
 							   
 					   		],
-					   	 colWidths: [0,180,100,300,50],
+					   	 colWidths: [0,10,180,100,300,50],
 					   	 wordWrap:false,
 				hiddenColumns: {
 				    columns: [0],
 				    indicators: true
+				  },
+				  afterChange: function (changes){
+					  if(changes)
+						  {
+							    changes.forEach(([row, prop, oldValue, newValue]) => {
+							    if(prop =="alt")
+							    	return;
+							    hotDisCnt.setDataAtCell(row, 1, "*");
+							    // console.log(row);
+							    });
+						  }
 				  }
-					
+				  ,afterSelection: function (row, column, row2, column2, preventScrolling, selectionLayerLevel){
+					 
+					  var __mid = this.getDataAtCell(row,0)
+						 // console.log(__mid);
+						  cur_discnt_mid = __mid;
+					  }
 				 	
 				 });
 	
 		<!--- 서점 할인율 그리드 -->
 		
 		<!---  도서리스트 조회  -->
-		function loadDataBookSch() {
+		function loadDataBookSch(frow) {
 			
 			var schBookTitle = $("input[name=inputBookTitle]").val();
 			var schBarCode = $("input[name=txtBarcode]").val();
@@ -369,7 +448,9 @@
 			var schStartPubdate = $("input[name=txtStartPubdate]").val();
 			var schEndPubdate = $("input[name=txtEndPubdate]").val();
 			
-			var bookVO = {bookTitle:schBookTitle,barcode:schBarCode,startPubdate:schStartPubdate,endPubdate:schEndPubdate};
+			var bookSt = $("#qryBookStatus").val();
+			
+			var bookVO = {bookTitle:schBookTitle,barcode:schBarCode,startPubdate:schStartPubdate,endPubdate:schEndPubdate,bookstatus:bookSt};
 			
 			var token = $("meta[name='_csrf']").attr("content");
 			var header = $("meta[name='_csrf_header']").attr("content");
@@ -386,7 +467,7 @@
 		        	},
 		        success: function(res) {
 		        
-		        	//console.log(res);
+		        	console.log(res);
 		        	if(res.length > 0)
 		        	{
 		        		//hotBookSch.destroy();
@@ -400,7 +481,7 @@
 		        		//	  window.location.reload();
 		        		//	  return;
 		        		//}
-		        		hot.selectCell(0,0);
+		        		hot.selectCell(frow,0);
 		        		
 		        	}
 		        	else
@@ -431,9 +512,6 @@
 		
 		<!---  도서상세조회  -->
 		function getBookByBookCode(book_code) {
-			
-		
-			
 		    $.ajax({
 		        url: '/data/book/getBook?book_code='+book_code,
 		        type: 'get',
@@ -444,7 +522,7 @@
 		        	},
 		        success: function(res) {
 		        
-		        	//console.log(res);
+		        	console.log(res);
 		        	$("#bookTitle").val(res.bookTitle);
 		        	$("#barcode").val(res.barcode);
 		        	
@@ -459,7 +537,9 @@
 		            
 		            
 		        	$("#pubDate").val(res.pubDate.replace(/\./gi,"-"));
-		        	let imgurl = "/bookImages/"+ res.barcode +".jpg"; 
+		        	
+		        	$("#BookStatus").val(res.bookstatus);
+		        	let imgurl = "/bookImages/"+ res.barcode +".jpg?rnd="+Math.random(); 
 		        	//console.log(imgurl);
 		        	$("#bookCover").attr("src", imgurl);
 		        },
@@ -563,9 +643,12 @@
 				        	  xhr.setRequestHeader(header, token);
 				        	},
 				        success: function(res) {
-				        	let imgurl = "/bookImages/"+ barcode +".jpg"; 
+				        	let imgurl = "/bookImages/"+ barcode +".jpg?rnd="+Math.random(); 
 				        	//console.log(imgurl);
-				        	$("#bookCover").attr("src", imgurl);
+				        	setTimeout(function() {
+				        		$("#bookCover").attr("src", imgurl);
+							}, 1000);
+				        
 				        	console.log(res);
 				        },
 				        error : function(request, status, error ) {   // 오류가 발생했을 때 호출된다. 
@@ -633,6 +716,211 @@
 		}
 		
 		<!--- 서점별할인율 추가  -->
+		
+		<!---  서점별할인율 삭제  -->
+		function delCusDiscount(book_code,mid) {
+		 return new Promise(function(resolve,reject){
+		   $.ajax({
+		        url: '/data/book/DelMemBookDiscnt?book_code='+book_code+'&mid='+mid,
+		        type: 'get',
+		        datatype:'json',
+		        beforeSend: function( xhr ) {
+		        	  xhr.setRequestHeader(header, token);
+		        	},
+		        success: function(res) {
+		        
+		           resolve("success");
+		      
+		        },
+		        error:function(request, status, error)
+		        {
+		        	reject(request.status);
+		        }
+		    });
+		  
+		 });
+		}
+		
+		<!--- 서점별할인율 삭제  -->
+		
+		<!--- 도서 변경 저장  -->
+		$("#save").click(function(e){
+
+			var book ={
+					bookCode:cur_book_code,
+					bookTitle:$("#bookTitle").val(),
+					barcode:$("#barcode").val(),
+		        	
+					bookVerInfo: $("#bookVerInfo").val(),
+					bookSubTitle:$("#bookSubTitle").val(),
+					publisher:$("#publisher").val(),
+					author:$("#author").val(),
+					
+		         
+					price:$("#price").val(),
+					dcPercent:$("#dcPercent").val(),
+					pubDate:$("#pubDate").val(),
+					bookstatus:$("#BookStatus").val()
+			}
+			
+		   if(book.bookTitle == "")
+			   {
+			   		alert("도서명을 입력해 주세요");
+			   		$("#bookTitle").focus();
+			   		return;
+			   }
+			
+			 if(book.barcode == "")
+			   {
+			   		alert("바코드를 입력해 주세요");
+			   		$("#barcode").focus();
+			   		return;
+			   }
+			 
+			 if(book.publisher == "")
+			   {
+			   		alert("출판사명을 입력해 주세요");
+			   		$("#publisher").focus();
+			   		return;
+			   }
+			 
+			 if(book.author == "")
+			   {
+			   		alert("저자를 입력해 주세요");
+			   		$("#author").focus();
+			   		return;
+			   }
+			 
+			 if(book.price == "")
+			   {
+			   		alert("정가를 입력해 주세요");
+			   		$("#price").focus();
+			   		return;
+			   }
+			 
+			 if(book.dcPercent == "")
+			   {
+			   		alert("할인율을 입력해 주세요");
+			   		$("#dcPercent").focus();
+			   		return;
+			   }
+			 
+			 if(book.pubDate == "")
+			   {
+			   		alert("발행일을 입력해 주세요");
+			   		$("#pubDate").focus();
+			   		return;
+			   }
+			 
+			$.ajax({
+			  	  url:'/data/book/updBook',
+			  	  type:'POST',
+			      contentType : "application/json; charset=UTF-8",
+			      dataType:"text",
+			      data:JSON.stringify(book),
+			      beforeSend: function(xhr) {
+	                  xhr.setRequestHeader(header, token);
+	              },
+			      success:function (data) {
+			    	saveDiscount();
+			      },
+			      error:function(request,status,error){
+			            alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+			        }
+		  });
+			
+			
+			
+		});
+		<!--- 도서 변경 저장  -->
+		<!--- 서점별할인율 변경 저장  -->
+		function saveDiscount()
+		{
+			
+			 var dataSrc = hotDisCnt.getSourceData();
+			 // console.log(dataSrc);
+			 dataSrc.forEach(function(element,index){
+				 if(element.discountPct == "")
+					 {
+					 	alert('할인율 입력해 주세요');
+					   hot.selectCell(index,5);
+					   return;
+					 }
+			 })
+			 
+			 if(cur_book_code == undefined)
+			{
+				alert("추가할 도서을 선택해 주세요");
+				$("#mid").focus();
+				return;
+			}
+			 
+			  var updDataSrc = dataSrc.filter(function(data){return data.alt == '*';});
+			  if(updDataSrc.length ==0)
+				  {
+				  		alert("수정되었습니다.");
+				  		return;
+				  }
+			 // console.log(updDataSrc);
+			 // return;
+			 //console.log({data:hot.getSourceData()}.filter(data => data.bookCode > 20));
+			  $.ajax({
+				  	  url:'/data/book/saveMemBookDiscnt?book_code='+cur_book_code,
+				  	  type:'POST',
+				      contentType : "application/json; charset=UTF-8",
+				      dataType:"text",
+				      data:JSON.stringify({data: updDataSrc}),
+				      beforeSend: function(xhr) {
+		                  xhr.setRequestHeader(header, token);
+		              },
+				      success:function (data) {
+				    	alert("수정되었습니다.");
+				    	var htRCnt = hotDisCnt.countRows();
+				    	for(var i=0;i<htRCnt;i++)
+				    	{
+				    		if(hotDisCnt.getDataAtCell(i,1) == "*")
+				    			hotDisCnt.setDataAtCell(i, 1, "");
+				    	}
+				      },
+				      error:function(request,status,error){
+				            alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+				        }
+			  });
+		}
+		<!--- 서점별할인율 변경 저장  -->
+		
+		<!-- 도서 삭제 클릭 이벤트 -->
+		$("#delete").click(function(e){
+			if(!confirm("선택도서를 삭제하시겠습니까?"))
+				return;
+			
+			var book ={
+					bookCode:cur_book_code,
+					
+					delYN:"Y"
+			};
+			
+			$.ajax({
+			  	  url:'/data/book/delBook',
+			  	  type:'POST',
+			      contentType : "application/json; charset=UTF-8",
+			      dataType:"text",
+			      data:JSON.stringify(book),
+			      beforeSend: function(xhr) {
+	                  xhr.setRequestHeader(header, token);
+	              },
+			      success:function (data) {
+			        alert("삭제되었습니다");
+			        loadDataBookSch(cur_book_row);
+			      },
+			      error:function(request,status,error){
+			            alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+			        }
+				});	
+			
+			
+		});
+		<!--  도서 삭제  클릭 이벤트 -->
 		</script>
 	</th:block>
 

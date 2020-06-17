@@ -1,6 +1,7 @@
 package com.ediro.service;
 
 import com.ediro.vo.MemberBookDiscountVO;
+import com.ediro.vo.MemberBookDiscountsVO;
 import com.google.common.base.Optional;
 import com.ediro.domain.MemberBookDiscount;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +44,7 @@ public class MemberBookDiscountService {
 		 	mbookDisCntVo.setAddress_detail(mbookDis.getMember().getAddress_detail());
 		 	mbookDisCntVo.setBossName(mbookDis.getMember().getBossName());
 		 	mbookDisCntVo.setCompanyName(mbookDis.getMember().getCompanyName());
-		 	//mbookDisCntVo.setMid(mbookDis.getMember().getMid());
+		 	mbookDisCntVo.setMid(mbookDis.getMember().getMid());
 		 	membookDisVos.add(mbookDisCntVo);
 		 	
 		 
@@ -52,6 +53,35 @@ public class MemberBookDiscountService {
 	 return membookDisVos;
   }
   
+  public void saveMembookDiscounts(BigInteger book_code,MemberBookDiscountsVO memBookDiscounts)
+  {
+	  for (MemberBookDiscountVO mbookDic : memBookDiscounts.getData()) {
+		  
+		  Member mem = cMemRepo.findMemberByMid(mbookDic.getMid());
+		  Book book = bookRepo.findBybookCode(book_code);
+		 
+		  MemberBookDiscount mBookDis = new MemberBookDiscount();
+		  mBookDis.setBook(book);
+		  mBookDis.setMember(mem);
+		  mBookDis.setDiscountPct(mbookDic.getDiscountPct());
+		  
+		  memBookDisRepo.save(mBookDis);
+		
+	}
+	 
+  }
+  
+  public void DelMembookDiscounts(BigInteger book_code,int mid)
+  {
+	  Optional<MemberBookDiscount> mbookDiscnt =  memBookDisRepo.findByBook_bookCodeAndMember_mid(book_code, mid);
+	  
+	  if (mbookDiscnt.isPresent()){
+		  MemberBookDiscount foo = mbookDiscnt.get();
+		  memBookDisRepo.delete(foo);
+	  }
+	  
+	 
+  }
   
   public boolean getMemberBookDisCount(BigInteger book_code,int mid)
   {

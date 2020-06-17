@@ -42,11 +42,12 @@
 		
 			<nav class="menu" id="menu">
 			<ul>
-			<li><a href="#">메인</a></li>
+			<li><a href="/bookStore/main">도서주문</a></li>
 			<li><a href="#">연혁</a></li>
 			<li><a href="#">사업 소개</a></li>
 			<li><a href="#">채용 정보</a></li>
 			<li><a href="#">문의</a></li>
+			
 			<li>
 			<div  sec:authorize="isAuthenticated()">
 				  <form method="post" th:action="@{/logout}" id="my_form">

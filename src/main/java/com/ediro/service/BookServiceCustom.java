@@ -35,6 +35,8 @@ public class BookServiceCustom {
 		Optional<Member> member = memberRepository.findByMemberID(principal.getName());
 		book.setMember(member.get());
 		bookReposit.save(book);
+		
+		
 	}
 	
 }

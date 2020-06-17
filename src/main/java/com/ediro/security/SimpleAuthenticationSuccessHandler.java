@@ -23,26 +23,30 @@ public class SimpleAuthenticationSuccessHandler implements AuthenticationSuccess
 	public void onAuthenticationSuccess(HttpServletRequest arg0, HttpServletResponse arg1, Authentication authentication)
 			throws IOException, ServletException {
 		
-		Collection <? extends GrantedAuthority> authorities = authentication.getAuthorities();
-		authorities.forEach(authority -> {
-			if(authority.getAuthority().equals("ROLE_MANAGER")) {
-				try {
-					redirectStrategy.sendRedirect(arg0, arg1, "/manager");
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			} else if(authority.getAuthority().equals("ROLE_ADMIN")) {
-				try {
-					redirectStrategy.sendRedirect(arg0, arg1, "/admin");
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			} else {
-	            throw new IllegalStateException();
-	        }
-		});
+		 Collection <? extends GrantedAuthority> authorities = authentication.getAuthorities();
+	      
+			authorities.forEach(authority -> {
+						
+					 if(authority.getAuthority().equals("ROLE_BOOKSTORE")) {
+							try {
+										redirectStrategy.sendRedirect(arg0,arg1,"/");
+								  } catch (Exception e) {
+										// TODO Auto-generated catch block
+										e.printStackTrace();
+									}
+						} else
+				if(authority.getAuthority().equals("ROLE_PUBLISHER")) {
+								try {
+											redirectStrategy.sendRedirect(arg0,arg1, "/publisher/main");
+									  } catch (Exception e) {
+											// TODO Auto-generated catch block
+											e.printStackTrace();
+									  }
+						} else {
+				            throw new IllegalStateException();
+						}
+	     
+	    });
 		
 	}
  

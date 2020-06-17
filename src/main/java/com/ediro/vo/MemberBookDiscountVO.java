@@ -13,4 +13,5 @@ public class MemberBookDiscountVO {
 	private String address;
 	private String address_detail;
 	private int discountPct;
+	private String alt;
 }

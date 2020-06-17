@@ -2,6 +2,7 @@ package com.ediro.persistence;
 
 import java.util.List;
 
+
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -9,6 +10,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
+import com.ediro.controller.BookOrderController;
 import com.ediro.domain.Basket;
 
 import com.ediro.domain.QBasket;
@@ -18,6 +20,9 @@ import com.ediro.vo.CusBasketVO;
 
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.JPQLQuery;
+
+import lombok.extern.java.Log;
+
 @Repository
 public class CustomBascketRepositoryImpl  extends QuerydslRepositorySupport implements CustomBascketRepository {
 

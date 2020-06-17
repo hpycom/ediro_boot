@@ -7,6 +7,7 @@ import java.math.BigInteger;
 import java.security.Principal;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.FilenameUtils;
@@ -61,6 +62,9 @@ public class PublisherController {
 	@Autowired
 	MemberBookDiscountService mBookDisSrv;
    
+	 @Autowired
+	    private HttpServletRequest request;
+	 
    @GetMapping("/main")
    public void main(Principal principal,Model model,PageVO pageVO,@ModelAttribute("book")Book book) {
 	   
@@ -124,16 +128,35 @@ public class PublisherController {
 	  if(!imageFile.isEmpty()){
 		     // String sourceFileName = imageFile.getOriginalFilename(); 
 		        //String sourceFileNameExtension = FilenameUtils.getExtension(sourceFileName).toLowerCase(); 
-		        File destinationFile = new File(UPLOADED_FOLDER + barcode+".jpg"); 
-		           log.info("" + destinationFile);
+		  
+		       // File destinationFile = new File(UPLOADED_FOLDER + barcode+".jpg"); 
+		        //   log.info("" + destinationFile);
 		    
-		           destinationFile.getParentFile().mkdirs(); 
-			        imageFile.transferTo(destinationFile);
+		          // destinationFile.getParentFile().mkdirs(); 
+			      //  imageFile.transferTo(destinationFile);
 		       
+			       // String uploadsDir = "/upload/";
+                    String realPathtoUploads =  UPLOADED_FOLDER;
+                    
+                    log.info(realPathtoUploads+  barcode+".jpg");
+                    
+                    if(! new File(realPathtoUploads).exists())
+                    {
+                        new File(realPathtoUploads).mkdir();
+                    }
+
+                   
+
+
+                    //String orgName = imageFile.getOriginalFilename();
+                    String filePath = realPathtoUploads +  barcode+".jpg";
+                    File dest = new File(filePath);
+                    imageFile.transferTo(dest);
 			       
 
 	   }
 	} catch (Exception ex){
+		  log.info("" + ex.getMessage()+"!!!");
 	   	 response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 	}
 	  return new ResponseEntity("Successfully uploaded - " + imageFile.getOriginalFilename(), new HttpHeaders(), HttpStatus.OK);

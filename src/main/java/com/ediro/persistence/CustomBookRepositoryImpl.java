@@ -13,17 +13,22 @@ import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
+import com.ediro.controller.BookOrderController;
 import com.ediro.domain.Book;
+import com.ediro.domain.BookStatus;
 import com.ediro.domain.Member;
 import com.ediro.domain.QBasket;
 import com.ediro.domain.QBook;
-
+import com.ediro.domain.QMemberBookDiscount;
 import com.ediro.vo.BookBascketVO;
 import com.ediro.vo.BookVO;
 
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.JPQLQuery;
 
+import lombok.extern.java.Log;
+
+@Log
 @Repository
 public class CustomBookRepositoryImpl extends QuerydslRepositorySupport implements CustomBookRepository {
 
@@ -57,6 +62,18 @@ public class CustomBookRepositoryImpl extends QuerydslRepositorySupport implemen
 		   query.where(book.pubDate.loe(vbook.getEndPubdate()));
 		   
 	   }
+	   
+	   
+	   if(StringUtils.hasText(vbook.getBookstatus()))
+	   {
+			 BookStatus bs =   BookStatus.valueOf(vbook.getBookstatus());
+			 log.info(bs.getCode());
+		   query.where(book.bookstatus.eq( com.ediro.domain.BookStatus.valueOf(vbook.getBookstatus())));
+	   }
+	   query.where(book.delYN.eq("N"));
+	
+
+	   
 	   List<Book> result = query.fetch();
 	   
 	   return result;
@@ -69,9 +86,11 @@ public class CustomBookRepositoryImpl extends QuerydslRepositorySupport implemen
 		
 			QBook qbook = QBook.book;
 			QBasket qbasket = QBasket.basket;
-				
+			QMemberBookDiscount qMembookDiscnt = QMemberBookDiscount.memberBookDiscount;
+			
 			JPQLQuery<BookBascketVO> query = from(qbook)
 		    		.leftJoin(qbasket).on(qbook.bookCode.eq(qbasket.book.bookCode)).on(qbasket.member.eq(user))
+		    		.leftJoin(qMembookDiscnt).on(qMembookDiscnt.book.eq(qbook)).on(qMembookDiscnt.member.eq(user))
 		    		.select(Projections.bean(BookBascketVO.class,
 		    								 qbook.bookCode,
 	    									 qbook.bookTitle,
@@ -80,7 +99,10 @@ public class CustomBookRepositoryImpl extends QuerydslRepositorySupport implemen
 	    									 qbook.pubDate,
 	    									 qbook.price,
 	    									 qbook.barcode,
-	    									 qbasket.orderQty));
+	    									 qbasket.orderQty,
+	    									 qbook.dcPercent,
+	    									 qMembookDiscnt.discountPct,
+	    									 qbook.bookstatus));
 		  
 		   if(StringUtils.hasText(bookvo.getBookTitle()))
 		   {
@@ -102,8 +124,9 @@ public class CustomBookRepositoryImpl extends QuerydslRepositorySupport implemen
 			   query.where(qbook.publisher.contains(bookvo.getPublisher()));
 		   }
 			
-		   
+		   query.where(qbook.delYN.eq("N"));
+		 
 		   final List<BookBascketVO> lstbook = getQuerydsl().applyPagination(page, query).fetch();
-	        return new PageImpl<BookBascketVO>(lstbook, page, query.fetchCount());
+		    return new PageImpl<BookBascketVO>(lstbook, page, query.fetchCount());
 	}
 }

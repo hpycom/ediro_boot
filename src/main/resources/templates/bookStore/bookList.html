@@ -4,10 +4,77 @@
        layout:decorate="~{/layout/layout_bstore_basic}">
 
 <head>
-    <title>관리용</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta charset="utf-8">
+  
     <style type="text/css">
 		input.htCheckboxRendererInput{ margin: 3; }
+		
+	
+body {overflow-x: hidden;}
+		/* ---------- book list --------------*/  
+		ul.booklist{
+			list-style-type:none;
+			margin:0px;
+			padding:0px;
+		}
+		
+		li.bookitem{
+			padding: 10px 0px 10px 0px;
+		    border-bottom:1px solid #d1d1d1;
+		}
+		
+		div.cover {
+			float:left;
+			width:115px;
+			height:154px;
+		}
+		  img.cover{
+		    	width:115px;
+		    	height:154px;
+		    }
+		/*div.bookinfo{
+		
+			width:100%;
+			margin:0 0 0 130px;
+		    padding-top:20px;
+			
+		}
+		
+		div.bookdetail::after{
+		  content: "";
+		  display: block;
+		  clear: both;
+		}
+		
+		div.bookdetail a{
+			font-size:16px;
+		}
+		div.bookdetinfo {
+			padding:5px 0 10px 0;
+			font-size:13px;
+		}
+		*/
+		div.navarea{
+			margin-top:5px;
+		}
+		
+		.button {
+		  background-color: #4CAF50; /* Green */
+		  border: none;
+		  color: white;
+		  text-align: center;
+		  text-decoration: none;
+		  display: inline-block;
+		  font-size: 16px;
+		  margin: 4px 2px;
+		  cursor: pointer;
+		}
+		
+		.cartButton {
+		 padding: 10px 24px;
+		}
+		
+		/* ---------- book list --------------*/
 	</style>
 	<meta name="_csrf" content="${_csrf.token}"/>
 	<meta name="_csrf_header" content="${_csrf.headerName}"/>
@@ -15,38 +82,38 @@
 
 <body>
  <section layout:fragment="content">
-<h2>주문등록</h2>
-<hr />
+
 <!-- <h3 sec:authentication="name">Spring security username</h3>
 <h3>[[${#authentication.name}]]</h3>-->
 
-<div>
+<div class="container">
 
- 			<div>
-			 	<form id='f1' class="form-horizontal" th:action="@{bookList}" method="get" autocomplete="off">
+
+ 			<div class="row justify-content-center">
+			 	<form id='f1' class="form-horizontal  col-md-12 " th:action="@{bookList}" method="get" autocomplete="off">
 	   					   <div class="form-group row">
-							    <label for="barcode" class="col-md-1 col-form-label">ISBN(ISSN)</label>
-							    <div class="col-md-2">
-							    	<input type="text" class="form-control" id="barcode" name="barcode" maxlength="13" th:value=${book.barcode}>
+							    <label for="barcode" class="col-lg-auto col-md-12 col-form-label col-form-label-sm px-lg-0 mx-lg-0">ISBN(ISSN)</label>
+							    <div class="col-lg-2 col-md-12">
+							    	<input type="text" class="form-control form-control-sm" id="barcode" name="barcode" maxlength="13" th:value=${book.barcode}>
 							    </div>
 					   
-							    <label for="bookTitle" class="col-md-1 col-form-label">도서명</label>
-							    <div class="col-md-8">
-							    	<input type="text" class="form-control" id="bookTitle" name="bookTitle" th:value=${book.bookTitle} >
+							    <label for="bookTitle" class="col-lg-auto col-md-12 col-form-label col-form-label-sm px-lg-0 mx-lg-0">도서명</label>
+							    <div class="col-lg-6 col-md-12">
+							    	<input type="text" class="form-control form-control-sm" id="bookTitle" name="bookTitle" th:value=${book.bookTitle} >
 						 		</div>
 						  </div>
 									  
 							
 						     <div class="form-group row" >
 								  
-								  <label for="publisher" class="col-md-1 col-form-label">출판사</label>
-								   <div class="col-md-5">
-									    <input type="text" class="form-control" id="publisher" name="publisher" th:value=${book.publisher}>
+								  <label for="publisher" class="col-lg-auto col-md-12 col-form-label col-form-label-sm px-lg-0 mx-lg-0">출판사</label>
+								   <div class="col-lg-4 col-md-12">
+									    <input type="text" class="form-control form-control-sm" id="publisher" name="publisher" th:value=${book.publisher}>
 							       </div>
 							  
-								   <label for="author"class="col-md-1 col-form-label">저자명</label>
-								   	  <div class="col-md-5">
-									    <input type="text" class="form-control" id="author" name="author" th:value=${book.author} >
+								   <label for="author"class="col-lg-auto col-md-12 col-form-label col-form-label-sm px-lg-0 mx-lg-0">저자명</label>
+								   	  <div class="col-lg-4 col-md-12">
+									    <input type="text" class="form-control form-control-sm" id="author" name="author" th:value=${book.author} >
 						    		</div>
 								  
 							</div>
@@ -62,30 +129,37 @@
 							
 				</form>
 		  	 </div>
-		  	 <div>
-			  	 <ul class = "booklist">
-			  	 	<li class="bookitem"  th:each="book:${booklist.listcontent}">
-			  	 	  <div class="bookdetail">
-			  	 	     	<div class="cover"><img class="cover" th:src="@{../img/img_ready.png}" alt="TimeSwitch"/></div>
-			  	 	    	<div class="bookinfo">
-						  	 	<div class="booktitle"><a href="#" ><strong>[[${book.bookTitle}]]</strong></a></div>
-						  	 	<div class="bookdetinfo">
+		  	 <div  class="row justify-content-center">
+			  	 <ul class="list-group  col-12">
+			  	 	<li class="list-group-item"  th:each="book:${booklist.listcontent}">
+			  	 	    <div class="row">
+			  	 	     	<div class="col-4 col-sm-2"><img class="cover" th:src="@{${'/bookImages/'+book.barcode+'.jpg'}}" onerror="this.src='../img/img_ready.png';" /></div>
+			  	 	    	<div class="col-8 col-sm-10">
+						  	 	<div class="booktitle  col-12  text-wrap"><a href="#" ><strong>[[${book.bookTitle}]]</strong></a></div>
+						  	 	<div class="bookdetinfo col-12 text-wrap">
 						  	 		<span>[[${book.publisher}]]</span> |
 							  	 	<span>[[${book.author}]]</span> |
+							  	 	<span>[[${#numbers.formatInteger(book.price,3,'DEFAULT')+'원'}]]</span> |
 							  	 	<span>[[${book.pubDate}]]</span> |
 							  	 	<img src="../img/shopping-cart.png"/>&nbsp;<span class='badge badge-primary' th:id="'span_'+${book.bookCode}">[[${book.orderQty}]]</span>
 							  	</div>
-							  	<div class="cart">
+							  	<div class="cart col-12">
 							  	수량:
-							  	<input type="text" th:id="'inputQty_'+${book.bookCode}" style="width:50px" value = "1"/>
-							  	<Button class="button cartButton" th:onclick="'addBascket(\'' + ${book.bookCode} + '\');'">카트에  넣기</Button> 
+							  	<input type="text" th:id="'inputQty_'+${book.bookCode}" style="width:50px" value = "1"/> &nbsp;&nbsp;
+							  	<Button  th:if="${book.bookstatus == T(com.ediro.domain.BookStatus).GOOD }" class="button cartButton" th:onclick="'addBascket(\'' + ${book.bookCode} + '\');'"  >카트에  넣기</Button> 
+							  	<span th:unless="${book.bookstatus == T(com.ediro.domain.BookStatus).GOOD }" style="color:red;" th:text="${book.bookstatus.code}"></span>
+							  	</div>
+							  	<div>
+							  	 	<span th:id="'spanDisPct_'+${book.bookCode}" th:if="${book.cusPercent} > 0" style="color:blue;font-size:10pt;" th:text="'할인율:'+${book.cusPercent}+'%'"></span>
+									<span th:id="'spanDisPct_'+${book.bookCode}" th:unless="${book.cusPercent} > 0" style="color:blue;font-size:10pt;" th:text="'할인율:'+${book.dcPercent}+'%'"></span>
+							  		
 							  	</div>
 					  	 	</div>
 				  	 	</div>
-			  	 	<li>
+			  	 	</li>
 			  	 </ul>
 		  	 </div>
-		  	 <div class="navarea">
+		  	 <div class="row col-md-12 justify-content-center">
 		  		 <nav>
 					   	
 			
@@ -109,6 +183,7 @@
 								
 					</nav>
 			</div>
+ 
 </div>
 </section>			
 <th:block layout:fragment="script">
