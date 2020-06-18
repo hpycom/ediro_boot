@@ -16,6 +16,7 @@ import com.ediro.persistence.CustomBookRepository;
 import com.ediro.persistence.MemberRepository;
 import com.ediro.vo.BookVO;
 import com.ediro.vo.PageVO;
+import com.ediro.vo.BookBascketVO;
 
 @Service
 public class BookServiceCustom {
@@ -25,8 +26,8 @@ public class BookServiceCustom {
 	@Autowired
 	MemberRepository memberRepository;
 	
-	public List<Book> getBooks(BookVO vbook){
-		 List<Book> bookList =	(List<Book>) bookReposit.search(vbook);
+	public List<BookBascketVO> getBooks(BookVO vbook,Principal principal){
+		 List<BookBascketVO> bookList =	 bookReposit.search(vbook,principal);
 		 return bookList;
 	}
 	

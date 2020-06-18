@@ -16,6 +16,6 @@ import org.springframework.data.domain.Pageable;
 
 
 public interface CustomBookRepository {
-	public List<Book> search(BookVO vbook);
+	public List<BookBascketVO> search(BookVO vbook,Principal principal);
 	public Page<BookBascketVO> getBookListWithCartInfo(BookVO bookvo,Pageable page,Principal principal);
 }

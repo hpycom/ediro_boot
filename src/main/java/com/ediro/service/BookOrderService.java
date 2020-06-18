@@ -15,10 +15,12 @@ import org.springframework.stereotype.Service;
 import com.ediro.domain.Basket;
 import com.ediro.domain.Book;
 import com.ediro.domain.Member;
+import com.ediro.domain.TempBasket;
 import com.ediro.persistence.BasketRepository;
 import com.ediro.persistence.BookRepository;
 
 import com.ediro.persistence.MemberRepository;
+import com.ediro.persistence.TempBasketRepository;
 import com.ediro.security.EdiroSecurityUser;
 import com.ediro.vo.BasketVO;
 import com.ediro.vo.BasketsVO;
@@ -37,6 +39,8 @@ public class BookOrderService {
 	BookRepository bookRepo;
 	@Autowired
 	MemberRepository memberRepo;
+	@Autowired
+	TempBasketRepository tempBasketRepo;
 	
 	@Transactional
 	public BasketsVO SaveBascket(BasketsVO bookBascket,@AuthenticationPrincipal EdiroSecurityUser user)
@@ -112,5 +116,36 @@ public class BookOrderService {
 		Page<BookBascketVO> result = bookRepo.getBookListWithCartInfo(book,page,principal);
 		
 		return result;
+	}
+	
+	@Transactional
+	public TempBasket SaveTempBascket(BasketVO bookBascket,@AuthenticationPrincipal EdiroSecurityUser user)
+	{
+		 Book book=	bookRepo.findBybookCode(bookBascket.getBook_code());
+		 Member mem=	memberRepo.findByMemberID(user.getMember().getMemberID()).orElse(null);
+		
+		 
+		 TempBasket _basket = tempBasketRepo.findOneByBook_bookCodeAndMember_mid(book.getBookCode(),mem.getMid());
+	
+		if(_basket == null)
+		{
+			TempBasket tbasket = new TempBasket();
+		  	
+		    tbasket.setBook(book);
+			tbasket.setMember(mem);
+			tbasket.setOrderQty(bookBascket.getOrderQty());
+		   
+			tempBasketRepo.save(tbasket);
+			
+			return tbasket;
+		}
+		else
+		{
+			_basket.setOrderQty(_basket.getOrderQty() + bookBascket.getOrderQty());
+			tempBasketRepo.save(_basket);
+			return _basket;
+		}
+		
+	
 	}
 }

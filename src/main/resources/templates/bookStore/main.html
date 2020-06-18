@@ -11,6 +11,19 @@
 	</style>
 	<meta name="_csrf" content="${_csrf.token}"/>
 	<meta name="_csrf_header" content="${_csrf.headerName}"/>
+	 <style type="text/css">
+	.bd-example-modal-lg .modal-dialog{
+    display: table;
+    position: relative;
+    margin: 0 auto;
+    top: calc(50% - 24px);
+  }
+  
+  .bd-example-modal-lg .modal-dialog .modal-content{
+    background-color: transparent;
+    border: none;
+  }
+	 </style>
   </head>
 
 <body>
@@ -26,7 +39,18 @@
 <div id="example" style="height:500px;"></div>
 
 
+
+
 <button onclick="javascript:loadBasket();">basketLoadTest</button>
+
+
+	  <div class="modal bd-example-modal-lg" id="spinnerModal" data-backdrop="static" tabindex="-1" role="dialog"   aria-hidden="true">
+	    <div  class="modal-dialog modal-sm">
+	        <div class="modal-content" style="width: 48px">
+	            <span class="fa fa-spinner fa-spin fa-3x"></span>
+	        </div>
+	    </div>
+	</div>
   <!-- Modal -->
 		   <div class="modal" id="exampleModal" data-backdrop="static" tabindex="-1" role="dialog"   aria-hidden="true">
 			  <div class="modal-dialog modal-dialog-centered modal-xl"> 
@@ -68,6 +92,7 @@
 <th:block layout:fragment="script">
 <script th:inline="javascript">
 
+ 
 function editColRenderer(instance, td, row, col, prop, value, cellProperties) {
 	  Handsontable.renderers.TextRenderer.apply(this, arguments);
 	  td.style.background = '#FFFFE0';
@@ -159,13 +184,13 @@ var hot = new Handsontable(example, {
 
 <script th:inline="javascript">
 var vCol=0,vRow=0;
-
+/*팝업 도서 그리드*/
 var datahot =  {
 		  licenseKey: 'non-commercial-and-evaluation',
 		  height:400,
 		  rowHeaders: true,
 		  colHeaders: true,
-		  colHeaders: ['선택','bookCode', '도서명', '바코드', '저자','출판사','정가'],
+		  colHeaders: ['선택','bookCode', '도서명', '바코드', '저자','출판사','할인율','정가','도서상태'],
 		  startRows: 0,
 		  startCols: 6,
 		  fillHandle:false,
@@ -179,8 +204,9 @@ var datahot =  {
 					    {data: 'barcode',readOnly:true},
 					    {data: 'author',readOnly:true},
 					    {data: 'publisher',readOnly:true},
-					    {data: 'price', type: 'numeric',numericFormat:{pattern: '0,0'},readOnly:true}
-					   
+					    {data: 'salePercent',readOnly:true},
+					    {data: 'price', type: 'numeric',numericFormat:{pattern: '0,0'},readOnly:true},
+					    {data: 'bookstatus',readOnly:true}
 			   		],
 			hiddenColumns: {
 			    columns: [1],
@@ -200,68 +226,41 @@ var datahot =  {
 			    		    var arrBookItem = new Array();
 			    		    
 			    		    var chkArrData = arrData.filter(function(data){return data.chk == '1';});
-			    		    console.log(chkArrData);
+			    		    //console.log(chkArrData);
+			    		    
 			    		    
 			    		    var tRow =  fRow;
+			    		
+			    		    //console.log(chkArrData);
+			    		   if(chkArrData.length ==0)
+			    			   {
+			    			   		let data = hotBookSch.getDataAtRow(vRow);
+			    			   		
+			    			   		chkArrData = [{
+			    			   			bookCode:data[1],
+			    			   			bookTitle:data[2],
+			    			   			barcode:data[3],
+			    			   			author:data[4],
+			    			   			publisher:data[5],
+			    			   			price:data[6]
+			    			   			
+			    			   		}];
+			    			   }
+			    		 
+			    		    $('#exampleModal').modal('toggle');
+			    		    event.preventDefault();
+			    		    $('#spinnerModal').modal('show');
+			    		
+			    		    setTimeout(function() {
+			    		    	hotPopDataLoad(chkArrData).then(
+					    		    		function(){
+					    		    			 $('#spinnerModal').modal('hide');
+					    		    			
+					    		    		});
+		    		    		}, 100);
 			    		  
-			    		    if(chkArrData.length > 0)
-			    		    {
-			    		    	chkArrData.forEach(function(item){
-			    		    		
-			    		    		console.log(item["bookCode"]);
-			    		    		hot.setDataAtCell(tRow,0,'0');
-					    		    hot.setDataAtCell(tRow,1,item["bookCode"]);
-					    		    hot.setDataAtCell(tRow,2,item["bookTitle"]);
-					    		    hot.setDataAtCell(tRow,3,item["barcode"]);
-					    		    hot.setDataAtCell(tRow,4,item["author"]);
-					    		    hot.setDataAtCell(tRow,5,item["publisher"]);
-					    		    hot.setDataAtCell(tRow,6,item["price"]);
-					    		    hot.setDataAtCell(tRow,7,1);
-					    		   
-					    		    var objBookItem = {basket_id:0,book_code:item["bookCode"],orderQty:1};
-					    		    
-					    		    arrBookItem.push(objBookItem);
-					    		    
-					    		    tRow+=1;
-			    		    	})
-			    		    	
-			    		    	 hot.selectCell(tRow-1,7);
-			    		    	 hot.alter('insert_row', tRow, 1);
-			    		    	
-			    		    	
-			    		    	 $('#exampleModal').modal('toggle');
-			    		    	 event.stopPropagation();
-			    		    	 
-			    		    	 //console.log(arrBookItem);
-			    		    	// addBascket(arrBookItem);
-			    		    }
-			    		    else
-			    		    {
-			    		    	$('.alert').alert();
-			    		    	
-			    		    	console.log(vRow);
-				    		    var data = hotBookSch.getDataAtRow(vRow);
-			    				
-				    		    if(data.length>0)
-			    				{
-				    		    	hot.setDataAtCell(tRow,0,'0');
-					    		    hot.setDataAtCell(tRow,1,data[1]);
-					    		    hot.setDataAtCell(tRow,2,data[2]);
-					    		    hot.setDataAtCell(tRow,3,data[3]);
-					    		    hot.setDataAtCell(tRow,4,data[4]);
-					    		    hot.setDataAtCell(tRow,5,data[5]);
-					    		    hot.setDataAtCell(tRow,6,data[6]);
-					    		    hot.setDataAtCell(tRow,7,1);
-					    		  
-					    		    hot.alter('insert_row', tRow+1, 1);
-					    		    hot.selectCell(tRow,7);
-					    		    
-					    		    $('#exampleModal').modal('toggle');
-					    		    event.stopPropagation();
-			    				}
-				       		
-			    		 }
-			    			//event.preventDefault();
+		    		    	
+			
 		    			
 		    		}
 			    	else if(event.keyCode == 32)
@@ -276,7 +275,41 @@ var datahot =  {
 		    		}
 		     }
 		 };	
-		
+		 
+
+/*팝업 도서 그리드*/		
+
+var hotPopDataLoad = function(param) { return new Promise(function (resolve, reject) {
+	  var tRow =  fRow;
+	if(param.length > 0)
+    {
+    	 
+		param.forEach(function(item){
+    		
+    		console.log(item["bookCode"]);
+    		hot.setDataAtCell(tRow,0,'0');
+		    hot.setDataAtCell(tRow,1,item["bookCode"]);
+		    hot.setDataAtCell(tRow,2,item["bookTitle"]);
+		    hot.setDataAtCell(tRow,3,item["barcode"]);
+		    hot.setDataAtCell(tRow,4,item["author"]);
+		    hot.setDataAtCell(tRow,5,item["publisher"]);
+		    hot.setDataAtCell(tRow,6,item["price"]);
+		    hot.setDataAtCell(tRow,7,1);
+		   
+		    //var objBookItem = {basket_id:0,book_code:item["bookCode"],orderQty:1};
+		    
+		    //arrBookItem.push(objBookItem);
+		    
+		    tRow+=1;
+    	})
+    	
+    	 hot.selectCell(tRow-1,7);
+    	 hot.alter('insert_row', tRow, 1);
+    	 
+    	 resolve("해결 완료");
+    }
+})
+};
 
 var hotBookSch;
 
@@ -289,9 +322,33 @@ $('#exampleModal').on('hide.bs.modal', function () {
 	hotBookSch.destroy();
 });
 
+function negativeValueRenderer(instance, td, row, col, prop, value, cellProperties) {
+	  Handsontable.renderers.TextRenderer.apply(this, arguments);
+
+	 
+	
+	    td.style.background = '#ffe6e6';
+	  
+	
+	
+};
+
+Handsontable.renderers.registerRenderer('negativeValueRenderer', negativeValueRenderer);
+
 $('#exampleModal').on('shown.bs.modal', function () {
 	hotBookSch = new Handsontable(divBookSch,datahot);
 	
+	hotBookSch.updateSettings({
+	 	 cells: function(row, col, prop){
+	   	var cellProperties = {};
+	     	if(hotBookSch.getDataAtCell(row, 8) !== '정상'){
+	       	cellProperties.readOnly = 'true'
+	       	cellProperties.renderer = "negativeValueRenderer";
+	      
+	       }
+	     return cellProperties
+	   }
+	 });
 	loadDataBookSch();
 });
 

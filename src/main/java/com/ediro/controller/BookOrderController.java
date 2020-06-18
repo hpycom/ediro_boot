@@ -1,5 +1,7 @@
 package com.ediro.controller;
 
+import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +26,8 @@ import com.ediro.service.BookService;
 import com.ediro.service.BookServiceCustom;
 import com.ediro.vo.BasketVO;
 import com.ediro.vo.BasketsVO;
+import com.ediro.vo.BookBascketVO;
+import com.ediro.vo.BookSchRstVO;
 import com.ediro.vo.BookVO;
 import com.ediro.vo.CusBasketVO;
 
@@ -54,13 +58,39 @@ public class BookOrderController {
 	
 	@RequestMapping(value = "/schBooks", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
 	@ResponseBody
-	public ResponseEntity<List<Book>> getBookList(@ModelAttribute("BookVO") BookVO vbook)
+	public ResponseEntity<List<BookSchRstVO>> getBookList(@ModelAttribute("BookVO") BookVO vbook,Principal principal)
 	{
 		log.info(vbook.getBookTitle());
 		
-	   List<Book> bookList = bookSrvCus.getBooks(vbook);
+	   List<BookBascketVO> bookList = bookSrvCus.getBooks(vbook,principal);
 	   
-	   return new ResponseEntity<>(bookList,HttpStatus.OK);
+	   List<BookSchRstVO> lstBookSchRst = new ArrayList<BookSchRstVO>();
+	   
+	   for(BookBascketVO bookone :bookList)
+	   {
+		   BookSchRstVO bsrv = new BookSchRstVO();
+		   bsrv.setBookCode(bookone.getBookCode());
+		   bsrv.setBookTitle(bookone.getBookTitle());
+		   bsrv.setPublisher(bookone.getPublisher());
+		   bsrv.setAuthor(bookone.getAuthor());
+		   bsrv.setPrice(bookone.getPrice());
+		   bsrv.setBarcode(bookone.getBarcode());
+		   bsrv.setPubDate(bookone.getPubDate());
+		   
+		   log.info(bookone.getBookTitle() + ": " + bookone.getDcPercent());
+		   if(bookone.getCusPercent() >0)
+		   {
+			   bsrv.setSalePercent(bookone.getCusPercent());
+		   }
+		   else
+			   bsrv.setSalePercent(bookone.getDcPercent());
+		   
+		   bsrv.setBookstatus(bookone.getBookstatus().getCode());
+			   
+		   lstBookSchRst.add(bsrv);
+	   }
+	   
+	   return new ResponseEntity<>(lstBookSchRst,HttpStatus.OK);
 	}
 	
 	@RequestMapping(value = "/saveBasket", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
