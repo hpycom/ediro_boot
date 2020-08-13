@@ -30,6 +30,9 @@ import com.ediro.vo.BookBascketVO;
 import com.ediro.vo.BookSchRstVO;
 import com.ediro.vo.BookVO;
 import com.ediro.vo.CusBasketVO;
+import com.ediro.vo.CusTempBasketVO;
+import com.ediro.vo.TempBasketVO;
+import com.ediro.vo.TempBasketsVO;
 
 import lombok.extern.java.Log;
 
@@ -114,6 +117,7 @@ public class BookOrderController {
 	  
 	   basketvo.setMid(bascket.getMember().getMid());
 	   basketvo.setBook_code(bascket.getBook().getBookCode());
+	   basketvo.setSalePercent(basketvo.getSalePercent());
 	   basketvo.setOrderQty(bascket.getOrderQty());
 	   
 	   
@@ -141,5 +145,48 @@ public class BookOrderController {
 	   List<CusBasketVO> lbasket = bookOrdSrv.getListBasket(user);
 	   
 	   return new ResponseEntity<>(lbasket,HttpStatus.OK);
+	}
+	
+	@GetMapping("/listTempBasket")
+	public ResponseEntity<List<CusTempBasketVO>> listTempBascket(@AuthenticationPrincipal EdiroSecurityUser user)
+	{
+		
+		
+	   List<CusTempBasketVO> lbasket = bookOrdSrv.getListTempBasket(user);
+	   
+	   return new ResponseEntity<>(lbasket,HttpStatus.OK);
+	}
+	
+	@RequestMapping(value = "/saveTempBasket", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+	@ResponseBody
+	public ResponseEntity<TempBasketsVO> saveTempBasket(@RequestBody TempBasketsVO vbascket,@AuthenticationPrincipal EdiroSecurityUser user )
+	{
+		log.info(vbascket.getListTempBascket().get(0).getBookCode().toString());
+		
+		TempBasketsVO bascketsVO = bookOrdSrv.SaveTempBascket(vbascket, user);
+	   
+	   return new ResponseEntity<>(bascketsVO,HttpStatus.OK);
+	}
+	
+	@RequestMapping(value = "/delTempBasket", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+	@ResponseBody
+	public ResponseEntity<TempBasketsVO> delTempBasket(@RequestBody TempBasketsVO vbascket,@AuthenticationPrincipal EdiroSecurityUser user )
+	{
+		log.info(vbascket.getListTempBascket().get(0).getBookCode().toString());
+		
+		TempBasketsVO bascketsVO = bookOrdSrv.DelTempBascket(vbascket, user);
+	   
+	   return new ResponseEntity<>(bascketsVO,HttpStatus.OK);
+	}
+	
+	@RequestMapping(value = "/clearTempBasket", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+	@ResponseBody
+	public void clearTempBasket(@AuthenticationPrincipal EdiroSecurityUser user )
+	{
+		//log.info(vbascket.getListTempBascket().get(0).getBookCode().toString());
+		
+		bookOrdSrv.DelTempBascketAll(user);
+	   
+	   //return new ResponseEntity<>(bascketsVO,HttpStatus.OK);
 	}
 }

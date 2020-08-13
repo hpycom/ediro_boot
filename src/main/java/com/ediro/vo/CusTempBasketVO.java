@@ -2,24 +2,22 @@ package com.ediro.vo;
 
 import java.math.BigInteger;
 import java.time.LocalDateTime;
-import java.util.List;
-
-import org.hibernate.annotations.CreationTimestamp;
 
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class CusBasketVO {
-	private int checkbox;
+public class CusTempBasketVO {
 	private BigInteger bookCode;
 	private String bookTitle;
 	private String barcode;
 	private String author;
 	private String publisher;
 	private String pubDate;
+    private int price;
     
-	private int orderQty;
+	private int salePercent;
+	private int qty;
 	private LocalDateTime regdate;
 }

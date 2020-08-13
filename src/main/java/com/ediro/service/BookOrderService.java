@@ -4,13 +4,14 @@ import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 
-import javax.jdo.annotations.Transactional;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.ediro.domain.Basket;
 import com.ediro.domain.Book;
@@ -27,7 +28,10 @@ import com.ediro.vo.BasketsVO;
 import com.ediro.vo.BookBascketVO;
 import com.ediro.vo.BookVO;
 import com.ediro.vo.CusBasketVO;
+import com.ediro.vo.CusTempBasketVO;
 import com.ediro.vo.PageVO;
+import com.ediro.vo.TempBasketVO;
+import com.ediro.vo.TempBasketsVO;
 
 
 @Service
@@ -42,43 +46,25 @@ public class BookOrderService {
 	@Autowired
 	TempBasketRepository tempBasketRepo;
 	
-	@Transactional
-	public BasketsVO SaveBascket(BasketsVO bookBascket,@AuthenticationPrincipal EdiroSecurityUser user)
-	{
-		bookBascket.getListBascket().forEach(basketvo ->{
-			Basket basket = new Basket();
-		    Book book=	bookRepo.findBybookCode(basketvo.getBook_code());
-		    Member mem=	memberRepo.findByMemberID(user.getMember().getMemberID()).orElse(null);
-			
-		    basket.setBook(book);
-			basket.setMember(mem);
-			basket.setOrderQty(basketvo.getOrderQty());
-		   
-			basketRepo.save(basket);
-		   /* basketvo.setBasket_id(basket.getBasket_id()); */
-			/*String book_code = bookInBascket.getBook().getBookCode().toString();
-			Basket basket = bascketRepo.findOneByBookCode(book_code);
-			bookInBascket.setBascket_id(bascket.getBascket_id());*/
-		});
-		
-		return bookBascket;
-	}
 	
-	@Transactional
+	
+	@Transactional(rollbackFor = {Exception.class})
 	public Basket SaveBascket(BasketVO bookBascket,@AuthenticationPrincipal EdiroSecurityUser user)
 	{
-		 Book book=	bookRepo.findBybookCode(bookBascket.getBook_code());
-		 Member mem=	memberRepo.findByMemberID(user.getMember().getMemberID()).orElse(null);
+			// Member mem=	memberRepo.findByMemberID(user.getMember().getMemberID()).orElse(null);
 		
 		 
-		Basket _basket = basketRepo.findOneByBook_bookCodeAndMember_mid(book.getBookCode(),mem.getMid());
+		Basket _basket = basketRepo.findOneByBook_bookCodeAndMember_mid(bookBascket.getBook_code(),user.getMember().getMid());
 	
 		if(_basket == null)
 		{
+			Book book=	bookRepo.findBybookCode(bookBascket.getBook_code());
+				
 			Basket basket = new Basket();
 		  	
 		    basket.setBook(book);
-			basket.setMember(mem);
+			basket.setMember(user.getMember());
+			basket.setSalePercent(bookBascket.getSalePercent());
 			basket.setOrderQty(bookBascket.getOrderQty());
 		   
 			basketRepo.save(basket);
@@ -91,8 +77,49 @@ public class BookOrderService {
 			basketRepo.save(_basket);
 			return _basket;
 		}
-		
 	
+	}
+	
+	@Transactional(rollbackFor = {Exception.class})
+	public BasketsVO SaveBascket(BasketsVO bookBascket,@AuthenticationPrincipal EdiroSecurityUser user)
+	{
+		bookBascket.getListBascket().forEach(basketvo ->{
+			 
+			
+			 
+			 Basket _basket = basketRepo.findOneByBook_bookCodeAndMember_mid(basketvo.getBook_code(),user.getMember().getMid());
+		
+			if(_basket == null)
+			{
+				Book book=	bookRepo.findBybookCode(basketvo.getBook_code());
+				
+				Basket tbasket = new Basket();
+			  	
+			    tbasket.setBook(book);
+				tbasket.setMember(user.getMember());
+				tbasket.setSalePercent(basketvo.getSalePercent());
+				tbasket.setOrderQty(basketvo.getOrderQty());
+			   
+				basketRepo.save(tbasket);
+				
+				
+				
+			}
+			else
+			{
+				_basket.setOrderQty(_basket.getOrderQty() + basketvo.getOrderQty());
+				basketRepo.save(_basket);
+				
+			
+				
+			}
+			
+			TempBasket tempbasket = tempBasketRepo.findOneByBook_bookCodeAndMember_mid(basketvo.getBook_code(),user.getMember().getMid());
+			
+			tempBasketRepo.delete(tempbasket);
+		});
+		
+		return bookBascket;
 	}
 	
 	public List<CusBasketVO> getListBasket(@AuthenticationPrincipal EdiroSecurityUser user)
@@ -118,10 +145,15 @@ public class BookOrderService {
 		return result;
 	}
 	
-	@Transactional
-	public TempBasket SaveTempBascket(BasketVO bookBascket,@AuthenticationPrincipal EdiroSecurityUser user)
+	public List<CusTempBasketVO> getListTempBasket(@AuthenticationPrincipal EdiroSecurityUser user)
+	{		
+		return tempBasketRepo.search(user);
+	}
+	
+	@Transactional(rollbackFor = {Exception.class})
+	public TempBasket SaveTempBascket(TempBasketVO bookBascket,@AuthenticationPrincipal EdiroSecurityUser user)
 	{
-		 Book book=	bookRepo.findBybookCode(bookBascket.getBook_code());
+		 Book book=	bookRepo.findBybookCode(bookBascket.getBookCode());
 		 Member mem=	memberRepo.findByMemberID(user.getMember().getMemberID()).orElse(null);
 		
 		 
@@ -133,7 +165,8 @@ public class BookOrderService {
 		  	
 		    tbasket.setBook(book);
 			tbasket.setMember(mem);
-			tbasket.setOrderQty(bookBascket.getOrderQty());
+			tbasket.setSalePercent(bookBascket.getSalePercent());
+			tbasket.setOrderQty(bookBascket.getQty());
 		   
 			tempBasketRepo.save(tbasket);
 			
@@ -141,11 +174,67 @@ public class BookOrderService {
 		}
 		else
 		{
-			_basket.setOrderQty(_basket.getOrderQty() + bookBascket.getOrderQty());
+			_basket.setOrderQty(_basket.getOrderQty() + bookBascket.getQty());
 			tempBasketRepo.save(_basket);
 			return _basket;
 		}
 		
 	
+	}
+	
+	@Transactional(rollbackFor = {Exception.class})
+	public TempBasketsVO SaveTempBascket(TempBasketsVO bookBascket,@AuthenticationPrincipal EdiroSecurityUser user)
+	{
+		bookBascket.getListTempBascket().forEach(basketvo ->{
+			 
+			
+			 
+			 TempBasket _basket = tempBasketRepo.findOneByBook_bookCodeAndMember_mid(basketvo.getBookCode(),user.getMember().getMid());
+		
+			if(_basket == null)
+			{
+				Book book=	bookRepo.findBybookCode(basketvo.getBookCode());
+				
+				TempBasket tbasket = new TempBasket();
+			  	
+			    tbasket.setBook(book);
+				tbasket.setMember(user.getMember());
+				tbasket.setSalePercent(basketvo.getSalePercent());
+				tbasket.setOrderQty(basketvo.getQty());
+			   
+				tempBasketRepo.save(tbasket);
+				
+				
+			}
+			else
+			{
+				_basket.setOrderQty(basketvo.getQty());
+				_basket.setSalePercent(basketvo.getSalePercent());
+				tempBasketRepo.save(_basket);
+				
+			}
+		});
+		
+		return bookBascket;
+	}
+	
+	@Transactional(rollbackFor = {Exception.class})
+	public TempBasketsVO DelTempBascket(TempBasketsVO bookBascket,@AuthenticationPrincipal EdiroSecurityUser user)
+	{
+		bookBascket.getListTempBascket().forEach(basketvo ->{
+			
+			TempBasket _basket = tempBasketRepo.findOneByBook_bookCodeAndMember_mid(basketvo.getBookCode(),user.getMember().getMid());
+		
+			tempBasketRepo.delete(_basket);
+		});
+		
+		return bookBascket;
+	}
+	
+	@Transactional(rollbackFor = {Exception.class})
+	public void DelTempBascketAll(@AuthenticationPrincipal EdiroSecurityUser user)
+	{
+		tempBasketRepo.deleteAll(tempBasketRepo.findAllByMember_mid(user.getMember().getMid()));
+		
 	}
 }

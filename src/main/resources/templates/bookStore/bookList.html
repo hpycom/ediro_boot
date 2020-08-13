@@ -227,8 +227,10 @@ body {overflow-x: hidden;}
 	    var header = $("meta[name='_csrf_header']").attr("content");
 	   
 	    var i = $('#inputQty_'+bookCode).val();
-	    var objBookItem = {mid:0,book_code:bookCode,orderQty:i};
-		
+	    var dcpct = $('#spanDisPct_'+bookCode).text().replace("%","").replace("할인율:","");
+	    
+	    var objBookItem = {mid:0,book_code:bookCode,orderQty:i,salePercent:dcpct};
+		console.log(objBookItem);
 	    $.ajax({
 		        url: '/bookOrder/saveBasketOne',
 		        type: 'post',

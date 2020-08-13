@@ -40,6 +40,7 @@ public class Basket {
 	@JoinColumn(name="book_code")
 	private Book book;
 	
+	private int salePercent;
 	private int orderQty;
 	
 	@CreationTimestamp

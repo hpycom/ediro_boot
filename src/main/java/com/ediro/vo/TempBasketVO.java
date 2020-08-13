@@ -1,20 +1,16 @@
 package com.ediro.vo;
 
 import java.math.BigInteger;
-import java.time.LocalDateTime;
+
 
 import lombok.Getter;
 import lombok.Setter;
-
 @Getter
 @Setter
-public class BasketVO {
+public class TempBasketVO {
 	private int mid;
-		
-	private BigInteger book_code;
 	
+	private BigInteger bookCode;
 	private int salePercent;
-	private int orderQty;
-	
-	
+	private int qty;
 }
