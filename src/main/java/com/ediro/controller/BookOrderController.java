@@ -100,7 +100,7 @@ public class BookOrderController {
 	@ResponseBody
 	public ResponseEntity<BasketsVO> saveBascket(@RequestBody BasketsVO vbascket,@AuthenticationPrincipal EdiroSecurityUser user )
 	{
-		log.info(vbascket.getListBascket().get(0).getBook_code().toString());
+		//log.info(vbascket.getListBascket().get(0).getBook_code());
 		
 	   BasketsVO bascketsVO = bookOrdSrv.SaveBascket(vbascket,user);
 	   
@@ -161,7 +161,7 @@ public class BookOrderController {
 	@ResponseBody
 	public ResponseEntity<TempBasketsVO> saveTempBasket(@RequestBody TempBasketsVO vbascket,@AuthenticationPrincipal EdiroSecurityUser user )
 	{
-		log.info(vbascket.getListTempBascket().get(0).getBookCode().toString());
+		//log.info(vbascket.getListTempBascket().get(0).getBookCode().toString());
 		
 		TempBasketsVO bascketsVO = bookOrdSrv.SaveTempBascket(vbascket, user);
 	   
@@ -172,7 +172,7 @@ public class BookOrderController {
 	@ResponseBody
 	public ResponseEntity<TempBasketsVO> delTempBasket(@RequestBody TempBasketsVO vbascket,@AuthenticationPrincipal EdiroSecurityUser user )
 	{
-		log.info(vbascket.getListTempBascket().get(0).getBookCode().toString());
+		//log.info(vbascket.getListTempBascket().get(0).getBookCode().toString());
 		
 		TempBasketsVO bascketsVO = bookOrdSrv.DelTempBascket(vbascket, user);
 	   

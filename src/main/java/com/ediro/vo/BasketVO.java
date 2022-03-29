@@ -11,7 +11,7 @@ import lombok.Setter;
 public class BasketVO {
 	private int mid;
 		
-	private BigInteger book_code;
+	private long book_code;
 	
 	private int salePercent;
 	private int orderQty;

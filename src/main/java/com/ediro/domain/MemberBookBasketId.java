@@ -14,5 +14,5 @@ public class MemberBookBasketId implements Serializable {
 
 	private int member;
 	
-	private BigInteger book;
+	private long book;
 }

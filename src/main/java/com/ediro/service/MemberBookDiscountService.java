@@ -53,7 +53,7 @@ public class MemberBookDiscountService {
 	 return membookDisVos;
   }
   
-  public void saveMembookDiscounts(BigInteger book_code,MemberBookDiscountsVO memBookDiscounts)
+  public void saveMembookDiscounts(long book_code,MemberBookDiscountsVO memBookDiscounts)
   {
 	  for (MemberBookDiscountVO mbookDic : memBookDiscounts.getData()) {
 		  
@@ -96,7 +96,7 @@ public class MemberBookDiscountService {
   
   
   
-  public void saveMemBookDiscount(BigInteger book_code,int mid,int discount)
+  public void saveMemBookDiscount(long book_code,int mid,int discount)
   {
 	  Member mem = cMemRepo.findMemberByMid(mid);
 	  Book book = bookRepo.findBybookCode(book_code);

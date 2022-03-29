@@ -63,13 +63,13 @@ public class BookService {
 		return result;
 	}
 	
-	public Book getBookByBookCode(BigInteger book_code )
+	public Book getBookByBookCode(long book_code )
 	{
 		  Book book  = bookRepository.findBybookCode(book_code);
 		  return book;
 	}
 	
-	public void deleteBook(BigInteger book_code,Principal principal)
+	public void deleteBook(long book_code,Principal principal)
 	{
 		  Book book  = bookRepository.findBybookCode(book_code);
 		  book.setDelYN("Y");

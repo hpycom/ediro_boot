@@ -8,5 +8,5 @@ import lombok.Data;
 @Data
 public class MemberBookDiscountId implements Serializable {
 	 private int member;
-	 private BigInteger book;
+	 private long book;
 }

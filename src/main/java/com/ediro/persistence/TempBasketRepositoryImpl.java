@@ -29,7 +29,7 @@ public class TempBasketRepositoryImpl  extends QuerydslRepositorySupport impleme
 		    //String userid = user.getMember().getMemberID();
 		    
 		QTempBasket tbasket = QTempBasket.tempBasket;
-			QBook qbook = QBook.book;
+		QBook qbook = QBook.book;
 			
 			JPQLQuery<CusTempBasketVO> query = from(tbasket)
 		    		.innerJoin(tbasket.book, qbook)

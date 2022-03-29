@@ -43,5 +43,5 @@ public interface BookRepository extends CrudRepository<Book, String>,QuerydslPre
 	
 	public List<Book> findByBookTitleContaining(String title);
 	public List<Book> findByMember_MemberID(String memberID);
-	public Book findBybookCode(BigInteger book_code);
+	public Book findBybookCode(long book_code);
 }

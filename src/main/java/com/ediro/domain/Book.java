@@ -39,7 +39,7 @@ public class Book {
 
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
-	private BigInteger bookCode;
+	private long bookCode;
 	private String bookTitle;
 	private String bookSubTitle;
 	private String bookVerInfo;

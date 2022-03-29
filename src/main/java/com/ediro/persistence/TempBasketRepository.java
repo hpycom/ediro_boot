@@ -13,8 +13,7 @@ import com.ediro.domain.TempBasket;
 
 public interface TempBasketRepository extends JpaRepository<TempBasket, String>,TempBasketRepositoryCustom{
 	
-	TempBasket findOneByBook_bookCodeAndMember_mid(BigInteger bookCode, int mid);
-	List<TempBasket>  findAllByMember_mid(int mid);
-	
+	TempBasket findOneByBook_bookCodeAndMember_mid(long bookCode, int mid);
+	List<TempBasket> findAllByMember_mid(int mid);
 	
 }

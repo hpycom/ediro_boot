@@ -51,7 +51,7 @@ public class RestBookController {
 		 Book book = null;
 		 try {
 			
-		    BigInteger _book_code = new BigInteger(book_code);
+		    long _book_code = Long.parseLong(book_code);
 		   
 		     book = bookSrv.getBookByBookCode(_book_code);
 		   
@@ -72,7 +72,7 @@ public class RestBookController {
 	 
 		 @RequestMapping(value="delBook",  method= RequestMethod.POST,consumes="application/json")
 		   public @ResponseBody  String delBooks(@RequestBody  Book book,RedirectAttributes rttr,Principal principal) {
-			 BigInteger book_code =book.getBookCode();
+			 long book_code =book.getBookCode();
 				   bookSrv.deleteBook(book_code,principal);
 				   return "asdf";
 				 
@@ -89,7 +89,7 @@ public class RestBookController {
 	    @RequestMapping(value = "/saveMemBookDiscnt", method = RequestMethod.POST,consumes="application/json")
 	  	public  @ResponseBody String saveMemBookDiscnt(@RequestParam("book_code") String book_code,@RequestBody MemberBookDiscountsVO membookDiscounts)
 	  	{
-	  	    BigInteger _book_code = new BigInteger(book_code);
+	    	 long _book_code = Long.parseLong(book_code);
 	        mBookDisSrv.saveMembookDiscounts(_book_code, membookDiscounts);
 	        return "asdf";
 	         
@@ -124,7 +124,7 @@ public class RestBookController {
 	  	{
 	    	 try {
 	    		
-	    		 BigInteger _book_code = new BigInteger(book_code);
+	    		 long _book_code = Long.parseLong(book_code);
 	    		 mBookDisSrv.saveMemBookDiscount(_book_code, mid, disPct);
 	    	 } 
 	    	 catch (Exception ex)

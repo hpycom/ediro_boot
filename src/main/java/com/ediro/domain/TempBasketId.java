@@ -9,5 +9,5 @@ import lombok.Data;
 public class TempBasketId implements Serializable {
 	private int member;
 	
-	private BigInteger book;
+	private long book;
 }

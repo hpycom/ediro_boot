@@ -10,7 +10,7 @@ import lombok.Setter;
 public class TempBasketVO {
 	private int mid;
 	
-	private BigInteger bookCode;
+	private long bookCode;
 	private int salePercent;
 	private int qty;
 }

@@ -86,7 +86,7 @@ public class PublisherController {
 	@ResponseBody
 	public ResponseEntity<Book> getBookBybookCode(@RequestParam("book_code") String book_code)
 	{
-	    BigInteger _book_code = new BigInteger(book_code);
+	    long _book_code = Long.parseLong(book_code);
         Book book = bookSrv.getBookByBookCode(_book_code);
         return new ResponseEntity<>(book,HttpStatus.OK);
 	}
